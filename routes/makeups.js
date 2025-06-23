@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
   const requiredFields = {
     studentId: 'Estudante',
     dateOld: 'Data Antiga',
-    dateReposition: 'Data Nova',
+    dateReplacement: 'Data Nova',
   }
 
   for (const field in requiredFields) {
@@ -23,7 +23,7 @@ router.post('/', async (req, res) => {
   await db.read()
   const students = db.data.alunos
 
-  const { studentId, dateOld, dateReposition } = req.body
+  const { studentId, dateOld, dateReplacement } = req.body
 
   // Search student by id
   const student = students.find(s => String(s.id) === String(studentId))
@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
     studentId,
     studentName: student.name,
     dateOld,
-    dateReposition
+    dateReplacement
   }
 
   db.data.reposicoes = db.data.reposicoes || []
