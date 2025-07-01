@@ -6,19 +6,19 @@ import db from '../db.js'
 
 const router = express.Router()
 
+const requiredFields = {
+  name: 'Nome',
+  phone: 'Telefone',
+  email: 'Email',
+}
+
 router.get('/', async (req, res) => {
   const students = await getAllStudents();
   res.json(students)
 })
 
 router.post('/', async (req, res) => {
-  const requiredFields = {
-    name: 'Nome',
-    phone: 'Telefone',
-    email: 'Email',
-  }
-
-  const error = validateFields(req.body, requiredFields);
+  const error = validateFields(req.body, requiredFields)
   if (error) return res.status(400).json({ error });
 
   const { name, phone, email } = req.body
@@ -40,7 +40,10 @@ router.post('/', async (req, res) => {
   res.status(201).json(newStudent)
 })
 
-router.patch('/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
+  const error = validateFields(req.body, requiredFields )
+  if (error) return res.status(400).json({ error })
+    
   const studentId = Number(req.params.id)
 
   await db.read()
@@ -53,18 +56,16 @@ router.patch('/:id', async (req, res) => {
 
   const { name, phone, email } = req.body
 
-  // Verifica se pelo menos um campo foi enviado
-  if (name === undefined && phone === undefined && email === undefined) {
-    return res.status(400).json({ error: 'É necessário enviar ao menos um campo para atualização' })
+  db.data.alunos[index] = {
+    ...db.data.alunos[index],
+    name,
+    phone,
+    email
   }
-
-  // Atualiza apenas os campos fornecidos
-  if (name !== undefined) db.data.alunos[index].name = name
-  if (phone !== undefined) db.data.alunos[index].phone = phone
-  if (email !== undefined) db.data.alunos[index].email = email
+  const studentUpdated = db.data.alunos[index]
 
   await db.write()
-  res.json(db.data.alunos[index])
+  res.json(studentUpdated)
 })
 
 router.delete('/:id', async (req, res) => {
