@@ -1,11 +1,14 @@
+import { getAllStudents } from '../services/studentService.js';
+import { validateFields } from '../utils/validation.js';
+
 import express from 'express'
 import db from '../db.js'
 
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-  await db.read()
-  res.json(db.data.alunos || [])
+  const students = await getAllStudents();
+  res.json(students)
 })
 
 router.post('/', async (req, res) => {
@@ -15,11 +18,9 @@ router.post('/', async (req, res) => {
     email: 'Email',
   }
 
-  for (const field in requiredFields) {
-    if (!req.body[field]) {
-      return res.status(400).json({ error: `${requiredFields[field]} é obrigatório` })
-    }
-  }
+  const error = validateFields(req.body, requiredFields);
+  if (error) return res.status(400).json({ error });
+
   const { name, phone, email } = req.body
 
   const newStudent = {
@@ -31,6 +32,7 @@ router.post('/', async (req, res) => {
   }
 
   await db.read()
+
   db.data.alunos = db.data.alunos || []
   db.data.alunos.push(newStudent)
   await db.write()
@@ -38,35 +40,28 @@ router.post('/', async (req, res) => {
   res.status(201).json(newStudent)
 })
 
-router.put('/:id', async (req, res) => {
+router.patch('/:id', async (req, res) => {
   const studentId = Number(req.params.id)
-
-  if (!req.body) {
-    return res.status(400).json({ error: 'Nome, Telefone e Email são obrigatórios' })
-  }
-  const { name, phone, email } = req.body
-
-  // Validação básica
-  if (!name || !phone || !email) {
-    return res.status(400).json({ error: 'Nome, Telefone e Email são obrigatórios' })
-  }
 
   await db.read()
   db.data.alunos = db.data.alunos || []
 
   const index = db.data.alunos.findIndex(student => student.id === studentId)
-
   if (index === -1) {
     return res.status(404).json({ error: 'Aluno não encontrado' })
   }
 
+  const { name, phone, email } = req.body
 
-  db.data.alunos[index] = {
-    ...db.data.alunos[index],
-    name,
-    phone,
-    email
+  // Verifica se pelo menos um campo foi enviado
+  if (name === undefined && phone === undefined && email === undefined) {
+    return res.status(400).json({ error: 'É necessário enviar ao menos um campo para atualização' })
   }
+
+  // Atualiza apenas os campos fornecidos
+  if (name !== undefined) db.data.alunos[index].name = name
+  if (phone !== undefined) db.data.alunos[index].phone = phone
+  if (email !== undefined) db.data.alunos[index].email = email
 
   await db.write()
   res.json(db.data.alunos[index])

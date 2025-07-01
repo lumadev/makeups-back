@@ -1,11 +1,14 @@
+import { getAllMakeups } from '../services/makeupService.js';
+import { validateFields } from '../utils/validation.js';
+
 import express from 'express'
 import db from '../db.js'
 
 const router = express.Router()
 
 router.get('/', async (req, res) => {
-  await db.read()
-  res.json(db.data.reposicoes || [])
+  const makeups = await getAllMakeups();
+  res.json(makeups)
 })
 
 router.post('/', async (req, res) => {
@@ -15,11 +18,9 @@ router.post('/', async (req, res) => {
     dateReplacement: 'Data Nova',
   }
 
-  for (const field in requiredFields) {
-    if (!req.body[field]) {
-      return res.status(400).json({ error: `${requiredFields[field]} é obrigatório` })
-    }
-  }
+  const error = validateFields(req.body, requiredFields);
+  if (error) return res.status(400).json({ error });
+
   await db.read()
   const students = db.data.alunos
 
