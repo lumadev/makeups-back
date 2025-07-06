@@ -1,4 +1,5 @@
-import { getAllMakeups } from '../services/makeupService.js';
+import { getAllMakeups, getMakeupById } from '../services/makeupService.js';
+import { getAllStudents } from '../services/studentService.js';
 import { validateFields } from '../utils/validation.js';
 
 import express from 'express'
@@ -48,31 +49,26 @@ router.post('/', async (req, res) => {
   res.status(201).json(newMakeup)
 })
 
-router.patch('/:id', async (req, res) => {
-  const { id } = req.params
-  const { studentId, dateOld, dateReplacement } = req.body
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const { studentId, dateOld, dateReplacement } = req.body;
 
-  await db.read()
-  const students = db.data.alunos
-  const makeups = db.data.reposicoes || []
-
-  const makeupIndex = makeups.findIndex(r => String(r.id) === String(id))
-
-  if (makeupIndex === -1) {
-    return res.status(404).json({ error: 'Reposição não encontrada' })
+  const makeup = await getMakeupById(id);
+  if (!makeup) {
+    return res.status(404).json({ error: 'Reposição não encontrada' });
   }
 
-  const makeup = makeups[makeupIndex]
+  const students = await getAllStudents();
 
-  // Validate for a student change
-  let updatedStudentName = makeup.studentName
+  // Search for student updated name
+  let updatedStudentName = makeup.studentName;
 
   if (studentId && String(studentId) !== String(makeup.studentId)) {
-    const student = students.find(s => String(s.id) === String(studentId))
-    if (!student) {
-      return res.status(404).json({ error: 'Aluno não encontrado' })
+    const studentUpdated = students.find(s => String(s.id) === String(studentId));
+    if (!studentUpdated) {
+      return res.status(404).json({ error: 'Aluno não encontrado' });
     }
-    updatedStudentName = student.name
+    updatedStudentName = studentUpdated.name;
   }
 
   const updatedMakeup = {
@@ -80,14 +76,18 @@ router.patch('/:id', async (req, res) => {
     studentId: studentId ?? makeup.studentId,
     studentName: updatedStudentName,
     dateOld: dateOld ?? makeup.dateOld,
-    dateReplacement: dateReplacement ?? makeup.dateReplacement
-  }
+    dateReplacement: dateReplacement === undefined ? makeup.dateReplacement : dateReplacement,
+  };
 
-  db.data.reposicoes[makeupIndex] = updatedMakeup
-  await db.write()
+  await db.read();
 
-  res.json(updatedMakeup)
-})
+  const makeupIndex = db.data.reposicoes.findIndex(r => String(r.id) === String(id));
+  db.data.reposicoes[makeupIndex] = updatedMakeup;
+  
+  await db.write();
+
+  res.json(updatedMakeup);
+});
 
 router.delete('/:id', async (req, res) => {
   const makeupId = Number(req.params.id)

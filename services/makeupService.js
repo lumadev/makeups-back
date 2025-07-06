@@ -5,4 +5,10 @@ async function getAllMakeups() {
   return db.data.reposicoes || [];
 }
 
-export { getAllMakeups }
+async function getMakeupById(id) {
+  await db.read();
+  const makeups = db.data.reposicoes || [];
+  return makeups.find(r => String(r.id) === String(id)) || null;
+}
+
+export { getAllMakeups, getMakeupById }
