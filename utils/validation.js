@@ -5,7 +5,7 @@
  * @param {Object} requiredFields - Keys and human-readable names of required fields. Example: { name: 'Name' }.
  * @returns {string|null} - Returns an error message if a field is missing, or null if all required fields are present.
  */
-export function validateFields(data, requiredFields) {
+function validateFields(data, requiredFields) {
   for (const field in requiredFields) {
     if (!data[field]) {
       return `O campo ${requiredFields[field]} é obrigatório`;
@@ -13,3 +13,5 @@ export function validateFields(data, requiredFields) {
   }
   return null;
 }
+
+export { validateFields }
