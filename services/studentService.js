@@ -5,4 +5,10 @@ async function getAllStudents() {
   return db.data.alunos || [];
 }
 
-export { getAllStudents }
+async function getStudentById(id) {
+  const makeups = getAllStudents();
+  return makeups.find(r => String(r.id) === String(id)) || null;
+}
+
+
+export { getAllStudents, getStudentById }

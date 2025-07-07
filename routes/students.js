@@ -1,10 +1,10 @@
 import { getAllStudents } from '../services/studentService.js';
 import { validateFields } from '../utils/validation.js';
 
-import express from 'express'
-import db from '../db.js'
+import express from 'express';
+import db from '../db.js';
 
-const router = express.Router()
+const router = express.Router();
 
 const requiredFields = {
   name: 'Nome',
@@ -14,14 +14,14 @@ const requiredFields = {
 
 router.get('/', async (req, res) => {
   const students = await getAllStudents();
-  res.json(students)
+  res.json(students);
 })
 
 router.post('/', async (req, res) => {
   const error = validateFields(req.body, requiredFields)
   if (error) return res.status(400).json({ error });
 
-  const { name, phone, email } = req.body
+  const { name, phone, email } = req.body;
 
   const newStudent = {
     id: Date.now(),
@@ -31,56 +31,61 @@ router.post('/', async (req, res) => {
     dateRegister: new Date()
   }
 
-  await db.read()
+  await db.read();
 
-  db.data.alunos = db.data.alunos || []
-  db.data.alunos.push(newStudent)
-  await db.write()
+  const students = await getAllStudents();
 
-  res.status(201).json(newStudent)
+  db.data.alunos = students;
+  db.data.alunos.push(newStudent);
+
+  await db.write();
+
+  res.status(201).json(newStudent);
 })
 
 router.put('/:id', async (req, res) => {
   const error = validateFields(req.body, requiredFields )
-  if (error) return res.status(400).json({ error })
+  if (error) return res.status(400).json({ error });
     
-  const studentId = Number(req.params.id)
+  const studentId = Number(req.params.id);
 
-  await db.read()
-  db.data.alunos = db.data.alunos || []
-
-  const index = db.data.alunos.findIndex(student => student.id === studentId)
-  if (index === -1) {
-    return res.status(404).json({ error: 'Aluno não encontrado' })
+  const student = await getStudentById(studentId);
+  if (!student) {
+    return res.status(404).json({ error: 'Aluno não encontrado' });
   }
+  const { name, phone, email } = req.body;
 
-  const { name, phone, email } = req.body
+  await db.read();
+  db.data.alunos = db.data.alunos || [];
 
+  const index = db.data.alunos.findIndex(s => s.id === studentId);
   db.data.alunos[index] = {
     ...db.data.alunos[index],
     name,
     phone,
     email
   }
-  const studentUpdated = db.data.alunos[index]
+  const studentUpdated = db.data.alunos[index];
 
-  await db.write()
-  res.json(studentUpdated)
+  await db.write();
+  res.json(studentUpdated);
 })
 
 router.delete('/:id', async (req, res) => {
-  const studentId = Number(req.params.id)
-  await db.read()
+  const studentId = Number(req.params.id);
 
-  db.data.alunos = db.data.alunos || []
-
-  const index = db.data.alunos.findIndex(student => student.id === studentId)
-  if (index === -1) {
-    return res.status(404).json({ error: 'Aluno não encontrado' })
+  const student = await getStudentById(studentId);
+  if (!student) {
+    return res.status(404).json({ error: 'Aluno não encontrado' });
   }
 
-  db.data.alunos.splice(index, 1)
-  await db.write()
+  await db.read();
+  db.data.alunos = db.data.alunos || [];
+
+  const index = db.data.alunos.findIndex(student => student.id === studentId);
+  db.data.alunos.splice(index, 1);
+
+  await db.write();
 
   res.status(200).json({ message: 'Aluno removido com sucesso' })
 })
