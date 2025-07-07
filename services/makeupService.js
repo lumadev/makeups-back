@@ -6,7 +6,7 @@ async function getAllMakeups() {
 }
 
 async function getMakeupById(id) {
-  const makeups = getAllMakeups();
+  const makeups = await getAllMakeups();
   return makeups.find(r => String(r.id) === String(id)) || null;
 }
 

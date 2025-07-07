@@ -1,4 +1,4 @@
-import { getAllStudents } from '../services/studentService.js';
+import { getAllStudents, getStudentById } from '../services/studentService.js';
 import { validateFields } from '../utils/validation.js';
 
 import express from 'express';

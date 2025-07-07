@@ -6,7 +6,7 @@ async function getAllStudents() {
 }
 
 async function getStudentById(id) {
-  const makeups = getAllStudents();
+  const makeups = await getAllStudents();
   return makeups.find(r => String(r.id) === String(id)) || null;
 }
 
