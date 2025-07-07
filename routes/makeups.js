@@ -1,5 +1,5 @@
 import { getAllMakeups, getMakeupById } from '../services/makeupService.js';
-import { getAllStudents } from '../services/studentService.js';
+import { getAllStudents, getStudentById } from '../services/studentService.js';
 import { validateFields } from '../utils/validation.js';
 
 import express from 'express'
@@ -22,14 +22,10 @@ router.post('/', async (req, res) => {
   const error = validateFields(req.body, requiredFields);
   if (error) return res.status(400).json({ error });
 
-  await db.read()
-  const students = db.data.alunos
-
   const { studentId, dateOld, dateReplacement } = req.body
 
   // Search student by id
-  const student = students.find(s => String(s.id) === String(studentId))
-
+  const student = await getStudentById(studentId);
   if (!student) {
     return res.status(404).json({ error: 'Aluno não encontrado' })
   }
@@ -41,9 +37,11 @@ router.post('/', async (req, res) => {
     dateOld,
     dateReplacement
   }
+  await db.read()
 
   db.data.reposicoes = db.data.reposicoes || []
   db.data.reposicoes.push(newMakeup)
+
   await db.write()
 
   res.status(201).json(newMakeup)
@@ -58,13 +56,11 @@ router.put('/:id', async (req, res) => {
     return res.status(404).json({ error: 'Reposição não encontrada' });
   }
 
-  const students = await getAllStudents();
-
   // Search for student updated name
   let updatedStudentName = makeup.studentName;
 
-  if (studentId && String(studentId) !== String(makeup.studentId)) {
-    const studentUpdated = students.find(s => String(s.id) === String(studentId));
+  if (studentId) {
+    const studentUpdated = await getStudentById(studentId);
     if (!studentUpdated) {
       return res.status(404).json({ error: 'Aluno não encontrado' });
     }
@@ -91,16 +87,18 @@ router.put('/:id', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
   const makeupId = Number(req.params.id)
-  await db.read()
 
+  const makeup = await getMakeupById(makeupId);
+  if (!makeup) {
+    return res.status(404).json({ error: 'Reposição não encontrada' });
+  }
+
+  await db.read()
   db.data.reposicoes = db.data.reposicoes || []
 
   const index = db.data.reposicoes.findIndex(makeup => makeup.id === makeupId)
-  if (index === -1) {
-    return res.status(404).json({ error: 'Reposição não encontrada' })
-  }
-
   db.data.reposicoes.splice(index, 1)
+
   await db.write()
 
   res.status(200).json({ message: 'Reposição removida com sucesso' })
