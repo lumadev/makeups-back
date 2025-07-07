@@ -28,6 +28,4 @@ app.use('/students', studentsRoutes)
 app.use('/makeups', makeupsRoutes)
 app.use('/auth', authRoutes)
 
-app.listen(port, () => {
-  console.log(`Servidor rodando em http://localhost:${port}`)
-})
+app.listen(port)

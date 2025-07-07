@@ -1,4 +1,4 @@
-import { comparePasswords, generateToken, hashPassword } from '../utils/auth.js';
+import { comparePasswords, generateToken } from '../utils/auth.js';
 import { getAllUsers } from '../services/userService.js';
 
 import express from 'express'
@@ -9,10 +9,10 @@ router.post('/login', async (req, res) => {
 
   const users = await getAllUsers();
 
-  const userValid = users.find(u => u.username === username);
+  const user = users.find(u => u.username === username);
   const passwordValid = await comparePasswords(password, user.password);
 
-  if (!userValid || !passwordValid) {
+  if (!user || !passwordValid) {
     return res.status(401).json({ error: 'Credenciais inválidas' });
   }
  

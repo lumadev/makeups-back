@@ -1,5 +1,5 @@
 import { getAllMakeups, getMakeupById } from '../services/makeupService.js';
-import { getAllStudents, getStudentById } from '../services/studentService.js';
+import { getStudentById } from '../services/studentService.js';
 import { validateFields } from '../utils/validation.js';
 
 import express from 'express'
