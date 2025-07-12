@@ -39,9 +39,9 @@ function validateDate(date) {
   const dateVar = new Date(date);
 
   if (isNaN(dateVar.getTime())) {
-    return true
+    return false
   }
-  return false
+  return true
 }
 
 export { errorFieldsRequired, errorsDate, validateDate }
