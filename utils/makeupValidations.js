@@ -1,6 +1,6 @@
 import { getMakeupById } from '../services/makeupService.js';
 import { getStudentById } from '../services/studentService.js';
-import { errorFieldsRequired, errorsDate, validateDate } from '../utils/validation.js';
+import { errorFieldsRequired, errorsDate, validateDate } from '../utils/validations.js';
 
 const requiredFields = {
   studentId: 'Estudante',
@@ -45,9 +45,6 @@ async function validatePut(req, res, next) {
   req.makeup = makeup
 
   const { studentId, dateOld, dateReplacement } = req.body;
-
-  console.log(dateOld)
-  console.log(dateReplacement)
 
   if (dateOld && !validateDate(dateOld)) {
     return res.status(400).json({ error: 'Data antiga inválida' });

@@ -44,4 +44,25 @@ function validateDate(date) {
   return true
 }
 
-export { errorFieldsRequired, errorsDate, validateDate }
+/**
+ * Validates that string fields do not exceed maximum allowed lengths.
+ *
+ * @param {Object} data - The object to validate (e.g., req.body).
+ * @param {Object} maxLengths - An object with field keys and their max length. Example: { name: 100 }.
+ * @returns {string|null} - Returns an error message if a field exceeds its max length, or null if all are valid.
+ */
+function checkMaxLengths(data, maxLengths) {
+  for (const field in maxLengths) {
+    if (data[field] && data[field].length > maxLengths[field]) {
+      return `O campo '${field}' excede o limite de ${maxLengths[field]} caracteres.`;
+    }
+  }
+  return null;
+}
+
+export { 
+  errorFieldsRequired,
+  errorsDate,
+  validateDate,
+  checkMaxLengths
+}
