@@ -1,6 +1,6 @@
 import { getAllMakeups, getMakeupById } from '../services/makeupService.js';
 import { getStudentById } from '../services/studentService.js';
-import { validateFields } from '../utils/validation.js';
+import { errorFieldsRequired, errorsDate, validateDate } from '../utils/validation.js';
 
 import express from 'express'
 import db from '../db.js'
@@ -18,10 +18,19 @@ router.post('/', async (req, res) => {
     dateOld: 'Data Antiga',
     dateReplacement: 'Data Nova',
   }
+  const dateFields = {
+    dateOld: 'Data Antiga',
+    dateReplacement: 'Data Nova',
+  }
 
-  const error = validateFields(req.body, requiredFields);
-  if (error) return res.status(400).json({ error });
+  const errorRequired = errorFieldsRequired(req.body, requiredFields);
+  if (errorRequired) return res.status(400).json({ error });
 
+  const errorDate = errorsDate(req.body, dateFields);
+  if (errorDate) return res.status(400).json({ error });
+
+  await db.read()
+  
   const { studentId, dateOld, dateReplacement } = req.body
 
   // Search student by id
@@ -54,6 +63,12 @@ router.put('/:id', async (req, res) => {
   const makeup = await getMakeupById(id);
   if (!makeup) {
     return res.status(404).json({ error: 'Reposição não encontrada' });
+  }
+  if (dateOld && !validateDate(dateOld)){
+    return res.status(404).json({ error: 'Data antiga inválida' })
+  }
+  if (dateReplacement && !validateDate(dateReplacement)){
+    return res.status(404).json({ error: 'Data de reposição inválida' })
   }
 
   // Search for student updated name

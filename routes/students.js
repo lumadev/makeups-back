@@ -1,5 +1,5 @@
 import { getAllStudents, getStudentById } from '../services/studentService.js';
-import { validateFields } from '../utils/validation.js';
+import { errorFieldsRequired } from '../utils/validation.js';
 
 import express from 'express';
 import db from '../db.js';
@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-  const error = validateFields(req.body, requiredFields)
+  const error = errorFieldsRequired(req.body, requiredFields)
   if (error) return res.status(400).json({ error });
 
   const { name, phone, email } = req.body;
@@ -44,8 +44,8 @@ router.post('/', async (req, res) => {
 })
 
 router.put('/:id', async (req, res) => {
-  const error = validateFields(req.body, requiredFields )
-  if (error) return res.status(400).json({ error });
+  const error = errorFieldsRequired(req.body, requiredFields )
+  if (error) return res.status(400).json({ error })
     
   const studentId = Number(req.params.id);
 
