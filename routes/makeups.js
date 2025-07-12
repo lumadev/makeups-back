@@ -1,6 +1,5 @@
-import { getAllMakeups, getMakeupById } from '../services/makeupService.js';
-import { getStudentById } from '../services/studentService.js';
-import { errorFieldsRequired, errorsDate, validateDate } from '../utils/validation.js';
+import { getAllMakeups } from '../services/makeupService.js';
+import { validatePost, validatePut, validateDelete } from '../utils/makeupValidations.js';
 
 import express from 'express'
 import db from '../db.js'
@@ -12,37 +11,16 @@ router.get('/', async (req, res) => {
   res.json(makeups)
 })
 
-router.post('/', async (req, res) => {
-  const requiredFields = {
-    studentId: 'Estudante',
-    dateOld: 'Data Antiga',
-    dateReplacement: 'Data Nova',
-  }
-  const dateFields = {
-    dateOld: 'Data Antiga',
-    dateReplacement: 'Data Nova',
-  }
-
-  const errorRequired = errorFieldsRequired(req.body, requiredFields);
-  if (errorRequired) return res.status(400).json({ error });
-
-  const errorDate = errorsDate(req.body, dateFields);
-  if (errorDate) return res.status(400).json({ error });
-
+router.post('/', validatePost, async (req, res) => {
   await db.read()
   
   const { studentId, dateOld, dateReplacement } = req.body
 
-  // Search student by id
-  const student = await getStudentById(studentId);
-  if (!student) {
-    return res.status(404).json({ error: 'Aluno não encontrado' })
-  }
-
   const newMakeup = {
     id: Date.now(),
     studentId,
-    studentName: student.name,
+    // get student from makeupValidations
+    studentName: req.student.name,
     dateOld,
     dateReplacement
   }
@@ -56,30 +34,18 @@ router.post('/', async (req, res) => {
   res.status(201).json(newMakeup)
 })
 
-router.put('/:id', async (req, res) => {
+router.put('/:id', validatePut, async (req, res) => {
   const { id } = req.params;
   const { studentId, dateOld, dateReplacement } = req.body;
 
-  const makeup = await getMakeupById(id);
-  if (!makeup) {
-    return res.status(404).json({ error: 'Reposição não encontrada' });
-  }
-  if (dateOld && !validateDate(dateOld)){
-    return res.status(404).json({ error: 'Data antiga inválida' })
-  }
-  if (dateReplacement && !validateDate(dateReplacement)){
-    return res.status(404).json({ error: 'Data de reposição inválida' })
-  }
+  // get makeup from makeupValidations
+  const makeup = req.makeup
 
   // Search for student updated name
   let updatedStudentName = makeup.studentName;
 
   if (studentId) {
-    const studentUpdated = await getStudentById(studentId);
-    if (!studentUpdated) {
-      return res.status(404).json({ error: 'Aluno não encontrado' });
-    }
-    updatedStudentName = studentUpdated.name;
+    updatedStudentName = req.studentUpdated.name;
   }
 
   const updatedMakeup = {
@@ -100,13 +66,8 @@ router.put('/:id', async (req, res) => {
   res.json(updatedMakeup);
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validateDelete, async (req, res) => {
   const makeupId = Number(req.params.id)
-
-  const makeup = await getMakeupById(makeupId);
-  if (!makeup) {
-    return res.status(404).json({ error: 'Reposição não encontrada' });
-  }
 
   await db.read()
   db.data.reposicoes = db.data.reposicoes || []
