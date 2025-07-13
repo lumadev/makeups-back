@@ -3,7 +3,7 @@ import { validatePost, validatePut, validateDelete } from '../utils/studentValid
 import { verifyToken } from '../middlewares/authMiddleware.js';
 
 import express from 'express';
-import db from '../db.js';
+import db from '../../db.js';
 
 const router = express.Router();
 

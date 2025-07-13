@@ -1,4 +1,4 @@
-import dbUsers from '../dbUsers.js'
+import dbUsers from '../../dbUsers.js'
 
 async function getAllUsers() {
   await dbUsers.read();

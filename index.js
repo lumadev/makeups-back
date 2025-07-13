@@ -4,10 +4,10 @@ import cors from 'cors'
 import db from './db.js'
 import dotenv from 'dotenv';
 
-import authRoutes from './routes/auth.js'
+import authRoutes from './src/routes/auth.js'
 import cookieParser from 'cookie-parser';
-import studentsRoutes from './routes/students.js'
-import makeupsRoutes from './routes/makeups.js'
+import studentsRoutes from './src/routes/students.js'
+import makeupsRoutes from './src/routes/makeups.js'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`
