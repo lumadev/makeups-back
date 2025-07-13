@@ -24,6 +24,8 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser());
 
+app.set('trust proxy', 1);
+
 await db.read()
 if (!db.data) {
   db.data = { alunos: [], reposicoes: [] }
