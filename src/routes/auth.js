@@ -13,9 +13,13 @@ router.post('/login', async (req, res) => {
   const user = users.find(u => u.username === username);
   let passwordValid = false
 
+  console.log(user)
+
   if (user) {
     passwordValid = await comparePasswords(password, user.password)
   }
+
+  console.log(passwordValid)
 
   if (!user || !passwordValid) {
     return res.status(401).json({ error: 'Credenciais inválidas' });
