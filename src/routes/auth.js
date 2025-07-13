@@ -13,13 +13,9 @@ router.post('/login', async (req, res) => {
   const user = users.find(u => u.username === username);
   let passwordValid = false
 
-  console.log(user)
-
   if (user) {
     passwordValid = await comparePasswords(password, user.password)
   }
-
-  console.log(passwordValid)
 
   if (!user || !passwordValid) {
     return res.status(401).json({ error: 'Credenciais inválidas' });
@@ -30,7 +26,7 @@ router.post('/login', async (req, res) => {
   res.cookie('token', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
+    sameSite: 'lax',
     maxAge: 3600000 // 1 hour
   });
  
