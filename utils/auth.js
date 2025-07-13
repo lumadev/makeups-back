@@ -1,7 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-const SECRET = process.env.SECRET;
 
 const hashPassword = async (plainPassword) => {
   const saltRounds = 12;
@@ -13,13 +12,16 @@ const comparePasswords = async (plain, hashed) => {
 };
 
 const generateToken = (user) => {
-  return jwt.sign({ id: user.id, username: user.username }, SECRET, {
+  const SECRET = process.env.SECRET;
+  const payload = { id: user.id, username: user.username }
+
+  return jwt.sign(payload, SECRET, {
     expiresIn: '1h',
   });
 };
 
 const verifyToken = (token) => {
-  return jwt.verify(token, SECRET);
+  return jwt.verify(token, process.env.SECRET);
 };
 
 export {
