@@ -1,10 +1,13 @@
 import { getAllStudents, } from '../services/studentService.js';
 import { validatePost, validatePut, validateDelete } from '../utils/studentValidations.js';
+import { verifyToken } from '../middlewares/authMiddleware.js';
 
 import express from 'express';
 import db from '../db.js';
 
 const router = express.Router();
+
+router.use(verifyToken);
 
 router.get('/', async (req, res) => {
   const students = await getAllStudents();

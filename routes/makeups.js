@@ -1,10 +1,13 @@
 import { getAllMakeups } from '../services/makeupService.js';
 import { validatePost, validatePut, validateDelete } from '../utils/makeupValidations.js';
+import { verifyToken } from '../middlewares/authMiddleware.js';
 
 import express from 'express'
 import db from '../db.js'
 
 const router = express.Router()
+
+router.use(verifyToken);
 
 router.get('/', async (req, res) => {
   const makeups = await getAllMakeups();
