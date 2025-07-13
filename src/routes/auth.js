@@ -30,7 +30,7 @@ router.post('/login', async (req, res) => {
     maxAge: 3600000 // 1 hour
   });
  
-  res.json({ message: 'Login feito com sucesso!' });
+  res.json({ token });
 });
 
 export default router
