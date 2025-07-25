@@ -3,7 +3,7 @@ import { validatePost, validatePut, validateDelete } from '../utils/makeupValida
 import { verifyToken } from '../middlewares/authMiddleware.js';
 
 import express from 'express'
-import db from '../../db.js'
+import { initDB } from '../../db.js'
 
 const router = express.Router()
 
@@ -15,7 +15,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', validatePost, async (req, res) => {
-  await db.read()
+  const db = await initDB()
   
   const { studentId, dateOld, dateReplacement } = req.body
 
@@ -38,6 +38,8 @@ router.post('/', validatePost, async (req, res) => {
 })
 
 router.put('/:id', validatePut, async (req, res) => {
+  const db = await initDB()
+
   const { id } = req.params;
   const { studentId, dateOld, dateReplacement } = req.body;
 
@@ -70,6 +72,7 @@ router.put('/:id', validatePut, async (req, res) => {
 });
 
 router.delete('/:id', validateDelete, async (req, res) => {
+  const db = await initDB()
   const makeupId = Number(req.params.id)
 
   await db.read()

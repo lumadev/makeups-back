@@ -3,7 +3,7 @@ import { validatePost, validatePut, validateDelete } from '../utils/studentValid
 import { verifyToken } from '../middlewares/authMiddleware.js';
 
 import express from 'express';
-import db from '../../db.js';
+import { initDB } from '../../db.js'
 
 const router = express.Router();
 
@@ -15,6 +15,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', validatePost, async (req, res) => {
+  const db = await initDB()
   const { name, phone, email } = req.body;
 
   const newStudent = {
@@ -37,7 +38,8 @@ router.post('/', validatePost, async (req, res) => {
   res.status(201).json(newStudent);
 })
 
-router.put('/:id', validatePut, async (req, res) => { 
+router.put('/:id', validatePut, async (req, res) => {
+  const db = await initDB() 
   const studentId = Number(req.params.id);
 
   const { name, phone, email } = req.body;
@@ -60,6 +62,7 @@ router.put('/:id', validatePut, async (req, res) => {
 })
 
 router.delete('/:id', validateDelete, async (req, res) => {
+  const db = await initDB()
   const studentId = Number(req.params.id);
 
   await db.read();

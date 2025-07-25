@@ -1,7 +1,6 @@
 // index.js
 import express from 'express'
 import cors from 'cors'
-import db from './db.js'
 import dotenv from 'dotenv';
 
 import authRoutes from './src/routes/auth.js'
@@ -29,12 +28,6 @@ app.use(express.json())
 app.use(cookieParser());
 
 app.set('trust proxy', 1);
-
-await db.read()
-if (!db.data) {
-  db.data = { alunos: [], reposicoes: [] }
-  await db.write()
-}
 
 // Usa os arquivos de rota
 app.use('/students', studentsRoutes)

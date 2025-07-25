@@ -1,6 +1,8 @@
-import db from '../../db.js'
+import { initDB } from '../../db.js'
 
 async function getAllStudents() {
+  const db = await initDB()
+
   await db.read();
   return db.data.alunos || [];
 }
