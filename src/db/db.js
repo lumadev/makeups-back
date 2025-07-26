@@ -1,6 +1,7 @@
 import { google } from 'googleapis';
 import { Low } from 'lowdb';
-import GoogleDriveAdapter from './src/db/googleDriveAdapter.js';
+
+import GoogleDriveAdapter from '../../src/db/googleDriveAdapter.js';
 
 async function initDB() {
   const keyBuffer = Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT_KEY, 'base64');

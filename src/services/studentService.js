@@ -1,4 +1,4 @@
-import { initDB } from '../../db.js'
+import { initDB } from '../db/db.js'
 
 async function getAllStudents() {
   const db = await initDB()

@@ -3,7 +3,7 @@ import { validatePost, validatePut, validateDelete } from '../utils/makeupValida
 import { verifyToken } from '../middlewares/authMiddleware.js';
 
 import express from 'express'
-import { initDB } from '../../db.js'
+import { initDB } from '../db/db.js'
 
 const router = express.Router()
 
