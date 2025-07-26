@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: 'None',
-    maxAge: 3600000 // 1 hour
+    maxAge: 8 * 60 * 60 * 1000, // 8 hours
   });
  
   res.json({ token });
