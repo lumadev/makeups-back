@@ -4,14 +4,35 @@ import { errorFieldsRequired, errorsDate, validateDate } from '../utils/validati
 
 const requiredFields = {
   studentId: 'Estudante',
-  dateOld: 'Data Antiga',
-  dateReplacement: 'Data Nova',
+  dateOld: 'Data Antiga'
 };
 
-const dateFields = {
-  dateOld: 'Data Antiga',
-  dateReplacement: 'Data Nova',
+const dateOldField = {
+  dateOld: 'Data Antiga'
 };
+
+/**
+ * Validate dateReplacement.
+ * 
+ * @param {*} date 
+ * @returns {string|null} - Returns an error message if dateReplacement is invalid
+ */
+function errorDateReplacement(data) {
+  const isOpenDate = data.isOpenDate;
+  const dateReplacement = data.dateReplacement
+
+  // only validate if the makeup class does not have an open date
+  if (isOpenDate) return null
+
+  if (!dateReplacement) {
+    return `O campo data de reposição é obrigatório`;
+  }
+
+  if (!validateDate(dateReplacement)) {
+    return `O campo data de reposição é inválido`;
+  }
+  return null
+}
 
 async function validatePost(req, res, next) {
   const errorRequired = errorFieldsRequired(req.body, requiredFields);
@@ -19,9 +40,14 @@ async function validatePost(req, res, next) {
     return res.status(400).json({ error: errorRequired });
   }
 
-  const errorDate = errorsDate(req.body, dateFields);
+  const errorDate = errorsDate(req.body, dateOldField);
   if (errorDate) {
     return res.status(400).json({ error: errorDate });
+  }
+
+  const errorDateReplacementVar = errorDateReplacement(req.body)
+  if (errorDateReplacementVar) {
+    return res.status(400).json({ error: errorDateReplacementVar });
   }
 
   const { studentId } = req.body;
@@ -44,14 +70,15 @@ async function validatePut(req, res, next) {
   }
   req.makeup = makeup
 
-  const { studentId, dateOld, dateReplacement } = req.body;
+  const { studentId, dateOld } = req.body;
 
   if (dateOld && !validateDate(dateOld)) {
     return res.status(400).json({ error: 'Data antiga inválida' });
   }
 
-  if (dateReplacement && !validateDate(dateReplacement)) {
-    return res.status(400).json({ error: 'Data de reposição inválida' });
+  const errorDateReplacementVar = errorDateReplacement(req.body)
+  if (errorDateReplacementVar) {
+    return res.status(400).json({ error: errorDateReplacementVar });
   }
 
   if (studentId) {
