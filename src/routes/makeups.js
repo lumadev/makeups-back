@@ -30,7 +30,7 @@ router.post('/', validatePost, async (req, res) => {
   await db.read()
 
   db.data.reposicoes = db.data.reposicoes || []
-  db.data.reposicoes.push(newMakeup)
+  db.data.reposicoes.unshift(newMakeup)
 
   await db.write()
 

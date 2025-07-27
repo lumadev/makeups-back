@@ -31,7 +31,7 @@ router.post('/', validatePost, async (req, res) => {
   const students = await getAllStudents();
 
   db.data.alunos = students;
-  db.data.alunos.push(newStudent);
+  db.data.alunos.unshift(newStudent);
 
   await db.write();
 
