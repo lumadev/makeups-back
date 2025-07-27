@@ -17,16 +17,17 @@ router.get('/', async (req, res) => {
 router.post('/', validatePost, async (req, res) => {
   const db = await initDB()
   
-  const { studentId, dateOld, dateReplacement } = req.body
+  const { studentId, dateOld, dateReplacement, isOpenDate } = req.body
 
   const newMakeup = {
     id: Date.now(),
     studentId,
-    // get student from makeupValidations
-    studentName: req.student.name,
+    studentName: req.student.name, // get student from makeupValidations
     dateOld,
-    dateReplacement
+    dateReplacement,
+    isOpenDate: isOpenDate ?? false,
   }
+
   await db.read()
 
   db.data.reposicoes = db.data.reposicoes || []
@@ -41,15 +42,15 @@ router.put('/:id', validatePut, async (req, res) => {
   const db = await initDB()
 
   const { id } = req.params;
-  const { studentId, dateOld, dateReplacement } = req.body;
+  const { studentId, dateOld, dateReplacement, isOpenDate } = req.body;
 
   // get makeup from makeupValidations
   const makeup = req.makeup
 
-  // Search for student updated name
   let updatedStudentName = makeup.studentName;
 
   if (studentId) {
+    // get studentUpdated from makeupValidations
     updatedStudentName = req.studentUpdated.name;
   }
 
@@ -59,6 +60,7 @@ router.put('/:id', validatePut, async (req, res) => {
     studentName: updatedStudentName,
     dateOld: dateOld ?? makeup.dateOld,
     dateReplacement: dateReplacement === undefined ? makeup.dateReplacement : dateReplacement,
+    isOpenDate: isOpenDate === undefined ? makeup.isOpenDate : isOpenDate,
   };
 
   await db.read();
