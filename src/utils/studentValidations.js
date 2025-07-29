@@ -2,9 +2,7 @@ import { errorFieldsRequired, checkMaxLengths } from './validations.js';
 import { getStudentById } from '../services/studentService.js';
 
 const requiredFields = {
-  name: 'Nome',
-  phone: 'Telefone',
-  email: 'Email',
+  name: 'Nome'
 };
 
 const maxLengths = {
