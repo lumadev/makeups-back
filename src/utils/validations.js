@@ -8,10 +8,10 @@
 function errorFieldsRequired(data, requiredFields) {
   for (const field in requiredFields) {
     if (!data[field]) {
-      return `O campo ${requiredFields[field]} é obrigatório`;
+      return `O campo ${requiredFields[field]} é obrigatório`
     }
   }
-  return null;
+  return null
 }
 
 /**
@@ -22,10 +22,10 @@ function errorFieldsRequired(data, requiredFields) {
  */
 function errorsDate(data, dateFields) {
   for (const field in dateFields) {
-    const fieldValue = data[field];
+    const fieldValue = data[field]
 
     if (!validateDate(fieldValue)) {
-      return `O campo ${dateFields[field]} é inválido`;
+      return `O campo ${dateFields[field]} é inválido`
     }
   }
   return null
@@ -36,7 +36,7 @@ function errorsDate(data, dateFields) {
  * @returns {Boolean} if date is valid
  */
 function validateDate(date) {
-  const dateVar = new Date(date);
+  const dateVar = new Date(date)
 
   if (isNaN(dateVar.getTime())) {
     return false
@@ -54,10 +54,10 @@ function validateDate(date) {
 function checkMaxLengths(data, maxLengths) {
   for (const field in maxLengths) {
     if (data[field] && data[field].length > maxLengths[field]) {
-      return `O campo '${field}' excede o limite de ${maxLengths[field]} caracteres.`;
+      return `O campo '${field}' excede o limite de ${maxLengths[field]} caracteres.`
     }
   }
-  return null;
+  return null
 }
 
 export { 

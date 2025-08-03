@@ -3,13 +3,13 @@ import { initDB } from '../db/db.js'
 async function getAllMakeups() {
   const db = await initDB()
   
-  await db.read();
-  return db.data.reposicoes || [];
+  await db.read()
+  return db.data.reposicoes || []
 }
 
 async function getMakeupById(id) {
-  const makeups = await getAllMakeups();
-  return makeups.find(r => String(r.id) === String(id)) || null;
+  const makeups = await getAllMakeups()
+  return makeups.find(r => String(r.id) === String(id)) || null
 }
 
 export { getAllMakeups, getMakeupById }

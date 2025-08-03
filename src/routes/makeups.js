@@ -1,16 +1,16 @@
-import { getAllMakeups } from '../services/makeupService.js';
-import { validatePost, validatePut, validateDelete } from '../utils/makeupValidations.js';
-import { verifyToken } from '../middlewares/authMiddleware.js';
+import { getAllMakeups } from '../services/makeupService.js'
+import { validatePost, validatePut, validateDelete } from '../utils/makeupValidations.js'
+import { verifyToken } from '../middlewares/authMiddleware.js'
 
 import express from 'express'
 import { initDB } from '../db/db.js'
 
 const router = express.Router()
 
-router.use(verifyToken);
+router.use(verifyToken)
 
 router.get('/', async (req, res) => {
-  const makeups = await getAllMakeups();
+  const makeups = await getAllMakeups()
   res.json(makeups)
 })
 
@@ -41,17 +41,17 @@ router.post('/', validatePost, async (req, res) => {
 router.put('/:id', validatePut, async (req, res) => {
   const db = await initDB()
 
-  const { id } = req.params;
-  const { studentId, dateOld, dateReplacement, isOpenDate } = req.body;
+  const { id } = req.params
+  const { studentId, dateOld, dateReplacement, isOpenDate } = req.body
 
   // get makeup from makeupValidations
   const makeup = req.makeup
 
-  let updatedStudentName = makeup.studentName;
+  let updatedStudentName = makeup.studentName
 
   if (studentId) {
     // get studentUpdated from makeupValidations
-    updatedStudentName = req.studentUpdated.name;
+    updatedStudentName = req.studentUpdated.name
   }
 
   const updatedMakeup = {
@@ -61,17 +61,17 @@ router.put('/:id', validatePut, async (req, res) => {
     dateOld: dateOld ?? makeup.dateOld,
     dateReplacement: dateReplacement === undefined ? makeup.dateReplacement : dateReplacement,
     isOpenDate: isOpenDate === undefined ? makeup.isOpenDate : isOpenDate,
-  };
+  }
 
-  await db.read();
+  await db.read()
 
-  const makeupIndex = db.data.reposicoes.findIndex(r => String(r.id) === String(id));
-  db.data.reposicoes[makeupIndex] = updatedMakeup;
+  const makeupIndex = db.data.reposicoes.findIndex(r => String(r.id) === String(id))
+  db.data.reposicoes[makeupIndex] = updatedMakeup
   
-  await db.write();
+  await db.write()
 
-  res.json(updatedMakeup);
-});
+  res.json(updatedMakeup)
+})
 
 router.delete('/:id', validateDelete, async (req, res) => {
   const db = await initDB()

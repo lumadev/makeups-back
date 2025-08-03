@@ -1,22 +1,22 @@
-import { getAllStudents, } from '../services/studentService.js';
-import { validatePost, validatePut, validateDelete } from '../utils/studentValidations.js';
-import { verifyToken } from '../middlewares/authMiddleware.js';
+import { getAllStudents, } from '../services/studentService.js'
+import { validatePost, validatePut, validateDelete } from '../utils/studentValidations.js'
+import { verifyToken } from '../middlewares/authMiddleware.js'
 
-import express from 'express';
+import express from 'express'
 import { initDB } from '../db/db.js'
 
-const router = express.Router();
+const router = express.Router()
 
-router.use(verifyToken);
+router.use(verifyToken)
 
 router.get('/', async (req, res) => {
-  const students = await getAllStudents();
-  res.json(students);
+  const students = await getAllStudents()
+  res.json(students)
 })
 
 router.post('/', validatePost, async (req, res) => {
   const db = await initDB()
-  const { name, phone, email } = req.body;
+  const { name, phone, email } = req.body
 
   const newStudent = {
     id: Date.now(),
@@ -26,28 +26,28 @@ router.post('/', validatePost, async (req, res) => {
     dateRegister: new Date()
   }
 
-  await db.read();
+  await db.read()
 
-  const students = await getAllStudents();
+  const students = await getAllStudents()
 
-  db.data.alunos = students;
-  db.data.alunos.unshift(newStudent);
+  db.data.alunos = students
+  db.data.alunos.unshift(newStudent)
 
-  await db.write();
+  await db.write()
 
-  res.status(201).json(newStudent);
+  res.status(201).json(newStudent)
 })
 
 router.put('/:id', validatePut, async (req, res) => {
   const db = await initDB() 
-  const studentId = Number(req.params.id);
+  const studentId = Number(req.params.id)
 
-  const { name, phone, email } = req.body;
+  const { name, phone, email } = req.body
 
-  await db.read();
-  db.data.alunos = db.data.alunos || [];
+  await db.read()
+  db.data.alunos = db.data.alunos || []
 
-  const index = db.data.alunos.findIndex(s => s.id === studentId);
+  const index = db.data.alunos.findIndex(s => s.id === studentId)
 
   db.data.alunos[index] = {
     ...db.data.alunos[index],
@@ -55,23 +55,23 @@ router.put('/:id', validatePut, async (req, res) => {
     phone,
     email
   }
-  const studentUpdated = db.data.alunos[index];
+  const studentUpdated = db.data.alunos[index]
 
-  await db.write();
-  res.json(studentUpdated);
+  await db.write()
+  res.json(studentUpdated)
 })
 
 router.delete('/:id', validateDelete, async (req, res) => {
   const db = await initDB()
-  const studentId = Number(req.params.id);
+  const studentId = Number(req.params.id)
 
-  await db.read();
-  db.data.alunos = db.data.alunos || [];
+  await db.read()
+  db.data.alunos = db.data.alunos || []
 
-  const index = db.data.alunos.findIndex(student => student.id === studentId);
-  db.data.alunos.splice(index, 1);
+  const index = db.data.alunos.findIndex(student => student.id === studentId)
+  db.data.alunos.splice(index, 1)
 
-  await db.write();
+  await db.write()
 
   res.status(200).json({ message: 'Aluno removido com sucesso' })
 })
