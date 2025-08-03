@@ -1,36 +1,41 @@
-import { comparePasswords, generateToken } from '../utils/auth.js';
-import { getAllUsers } from '../services/userService.js';
-
+import { comparePasswords, generateToken } from '../utils/auth.js'
 import express from 'express'
+import dotenv from 'dotenv';
+
+dotenv.config({
+  path: `.env.${process.env.NODE_ENV}`
+});
 
 const router = express.Router()
 
+const USERNAME = String(process.env.USERNAME_MAKEUPS)
+const PASSWORD_HASH = String(process.env.PASSWORD_MAKEUPS)
+
 router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password } = req.body
 
-  const users = await getAllUsers();
-
-  const user = users.find(u => u.username === username);
   let passwordValid = false
 
-  if (user) {
-    passwordValid = await comparePasswords(password, user.password)
+  if (username === USERNAME) {
+    passwordValid = await comparePasswords(password, PASSWORD_HASH)
   }
 
-  if (!user || !passwordValid) {
-    return res.status(401).json({ error: 'Credenciais inválidas' });
+  if (username !== USERNAME || !passwordValid) {
+    return res.status(401).json({ error: 'Credenciais inválidas' })
   }
-    
-  const token = generateToken(user);
+
+  const user = { username: USERNAME }
+
+  const token = generateToken(user)
 
   res.cookie('token', token, {
     httpOnly: true,
     secure: true,
     sameSite: 'None',
-    maxAge: 8 * 60 * 60 * 1000, // 8 hours
-  });
- 
-  res.json({ token });
-});
+    maxAge: 8 * 60 * 60 * 1000, // 8 horas
+  })
+
+  res.json({ token })
+})
 
 export default router
