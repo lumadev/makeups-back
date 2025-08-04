@@ -8,6 +8,36 @@ async function getAllMakeups() {
   return db.data.reposicoes || []
 }
 
+/**
+ * @param {object} body body from request
+ * @param {string} studentName student name from request
+ * 
+ * @returns {object} newMakeup
+ */
+async function createMakeup(body, studentName) {
+  const db = await initDB(DB_TYPE_MAKEUPS)
+  
+  const { studentId, dateOld, dateReplacement, isOpenDate } = body
+
+  const newMakeup = {
+    id: Date.now(),
+    studentId,
+    studentName, // get student from makeupValidations
+    dateOld,
+    dateReplacement,
+    isOpenDate: isOpenDate ?? false,
+  }
+
+  await db.read()
+
+  db.data.reposicoes = db.data.reposicoes || []
+  db.data.reposicoes.unshift(newMakeup)
+
+  await db.write()
+
+  return newMakeup
+}
+
 async function deleteMakeup(idMakeup) {
   const db = await initDB(DB_TYPE_MAKEUPS)
   const makeupId = Number(idMakeup)
@@ -26,4 +56,9 @@ async function getMakeupById(id) {
   return makeups.find(r => String(r.id) === String(id)) || null
 }
 
-export { getAllMakeups, deleteMakeup, getMakeupById }
+export { 
+  getAllMakeups, 
+  deleteMakeup, 
+  createMakeup,
+  getMakeupById
+}

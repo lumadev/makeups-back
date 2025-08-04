@@ -1,4 +1,4 @@
-import { getAllMakeups, deleteMakeup } from '../services/makeupService.js'
+import { getAllMakeups, deleteMakeup, createMakeup } from '../services/makeupService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/makeupValidations.js'
 import { verifyToken } from '../middlewares/authMiddleware.js'
 
@@ -17,25 +17,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', validatePost, async (req, res) => {
-  const db = await initDB(DB_TYPE_MAKEUPS)
-  
-  const { studentId, dateOld, dateReplacement, isOpenDate } = req.body
-
-  const newMakeup = {
-    id: Date.now(),
-    studentId,
-    studentName: req.student.name, // get student from makeupValidations
-    dateOld,
-    dateReplacement,
-    isOpenDate: isOpenDate ?? false,
-  }
-
-  await db.read()
-
-  db.data.reposicoes = db.data.reposicoes || []
-  db.data.reposicoes.unshift(newMakeup)
-
-  await db.write()
+  const newMakeup = await createMakeup(req.body, req.student.name)
 
   res.status(201).json(newMakeup)
 })
