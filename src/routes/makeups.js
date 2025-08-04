@@ -1,4 +1,4 @@
-import { getAllMakeups } from '../services/makeupService.js'
+import { getAllMakeups, deleteMakeup } from '../services/makeupService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/makeupValidations.js'
 import { verifyToken } from '../middlewares/authMiddleware.js'
 
@@ -76,17 +76,8 @@ router.put('/:id', validatePut, async (req, res) => {
 })
 
 router.delete('/:id', validateDelete, async (req, res) => {
-  const db = await initDB(DB_TYPE_MAKEUPS)
-  const makeupId = Number(req.params.id)
-
-  await db.read()
-  db.data.reposicoes = db.data.reposicoes || []
-
-  const index = db.data.reposicoes.findIndex(makeup => makeup.id === makeupId)
-  db.data.reposicoes.splice(index, 1)
-
-  await db.write()
-
+  await deleteMakeup(req.params.id)
+  
   res.status(200).json({ message: 'Reposição removida com sucesso' })
 })
 
