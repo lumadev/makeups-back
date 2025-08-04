@@ -1,7 +1,8 @@
 import { initDB } from '../db/db.js'
+import { DB_TYPE_MAKEUPS } from '../db/dbTypeConsts.js'
 
 async function getAllMakeups() {
-  const db = await initDB()
+  const db = await initDB(DB_TYPE_MAKEUPS)
   
   await db.read()
   return db.data.reposicoes || []

@@ -2,8 +2,10 @@ import { getAllMakeups } from '../services/makeupService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/makeupValidations.js'
 import { verifyToken } from '../middlewares/authMiddleware.js'
 
-import express from 'express'
+import { DB_TYPE_MAKEUPS } from '../db/dbTypeConsts.js'
 import { initDB } from '../db/db.js'
+
+import express from 'express'
 
 const router = express.Router()
 
@@ -15,7 +17,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', validatePost, async (req, res) => {
-  const db = await initDB()
+  const db = await initDB(DB_TYPE_MAKEUPS)
   
   const { studentId, dateOld, dateReplacement, isOpenDate } = req.body
 
@@ -39,7 +41,7 @@ router.post('/', validatePost, async (req, res) => {
 })
 
 router.put('/:id', validatePut, async (req, res) => {
-  const db = await initDB()
+  const db = await initDB(DB_TYPE_MAKEUPS)
 
   const { id } = req.params
   const { studentId, dateOld, dateReplacement, isOpenDate } = req.body
@@ -74,7 +76,7 @@ router.put('/:id', validatePut, async (req, res) => {
 })
 
 router.delete('/:id', validateDelete, async (req, res) => {
-  const db = await initDB()
+  const db = await initDB(DB_TYPE_MAKEUPS)
   const makeupId = Number(req.params.id)
 
   await db.read()
