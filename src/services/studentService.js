@@ -1,7 +1,8 @@
 import { initDB } from '../db/db.js'
+import { DB_TYPE_STUDENTS } from '../db/dbTypeConsts.js'
 
 async function getAllStudents() {
-  const db = await initDB()
+  const db = await initDB(DB_TYPE_STUDENTS)
 
   await db.read()
   return db.data.alunos || []

@@ -1,9 +1,11 @@
-import { getAllStudents, } from '../services/studentService.js'
+import { getAllStudents } from '../services/studentService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/studentValidations.js'
 import { verifyToken } from '../middlewares/authMiddleware.js'
 
-import express from 'express'
+import { DB_TYPE_STUDENTS } from '../db/dbTypeConsts.js'
 import { initDB } from '../db/db.js'
+
+import express from 'express'
 
 const router = express.Router()
 
@@ -15,7 +17,7 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', validatePost, async (req, res) => {
-  const db = await initDB()
+  const db = await initDB(DB_TYPE_STUDENTS)
   const { name, phone, email } = req.body
 
   const newStudent = {
@@ -39,7 +41,7 @@ router.post('/', validatePost, async (req, res) => {
 })
 
 router.put('/:id', validatePut, async (req, res) => {
-  const db = await initDB() 
+  const db = await initDB(DB_TYPE_STUDENTS) 
   const studentId = Number(req.params.id)
 
   const { name, phone, email } = req.body
@@ -62,7 +64,7 @@ router.put('/:id', validatePut, async (req, res) => {
 })
 
 router.delete('/:id', validateDelete, async (req, res) => {
-  const db = await initDB()
+  const db = await initDB(DB_TYPE_STUDENTS)
   const studentId = Number(req.params.id)
 
   await db.read()
