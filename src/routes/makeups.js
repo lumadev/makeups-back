@@ -1,9 +1,6 @@
-import { getAllMakeups, deleteMakeup, createMakeup } from '../services/makeupService.js'
+import { getAllMakeups, deleteMakeup, createMakeup, updateMakeup } from '../services/makeupService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/makeupValidations.js'
 import { verifyToken } from '../middlewares/authMiddleware.js'
-
-import { DB_TYPE_MAKEUPS } from '../db/dbTypeConsts.js'
-import { initDB } from '../db/db.js'
 
 import express from 'express'
 
@@ -23,36 +20,12 @@ router.post('/', validatePost, async (req, res) => {
 })
 
 router.put('/:id', validatePut, async (req, res) => {
-  const db = await initDB(DB_TYPE_MAKEUPS)
-
-  const { id } = req.params
-  const { studentId, dateOld, dateReplacement, isOpenDate } = req.body
-
-  // get makeup from makeupValidations
+  const idMakeup = req.params.id
+  const body = req.body
   const makeup = req.makeup
+  const studentName = makeup.studentName
 
-  let updatedStudentName = makeup.studentName
-
-  if (studentId) {
-    // get studentUpdated from makeupValidations
-    updatedStudentName = req.studentUpdated.name
-  }
-
-  const updatedMakeup = {
-    ...makeup,
-    studentId: studentId ?? makeup.studentId,
-    studentName: updatedStudentName,
-    dateOld: dateOld ?? makeup.dateOld,
-    dateReplacement: dateReplacement === undefined ? makeup.dateReplacement : dateReplacement,
-    isOpenDate: isOpenDate === undefined ? makeup.isOpenDate : isOpenDate,
-  }
-
-  await db.read()
-
-  const makeupIndex = db.data.reposicoes.findIndex(r => String(r.id) === String(id))
-  db.data.reposicoes[makeupIndex] = updatedMakeup
-  
-  await db.write()
+  const updatedMakeup = updateMakeup(idMakeup, body, makeup, studentName)
 
   res.json(updatedMakeup)
 })
