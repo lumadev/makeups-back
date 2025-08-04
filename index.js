@@ -19,8 +19,6 @@ const corsOrigin = process.env.NODE_ENV === 'development'
   ? 'http://localhost:5173'
   : process.env.FRONTEND_URL
 
-console.log(corsOrigin)
-
 app.use(cors({
   origin: corsOrigin,
   credentials: true, 

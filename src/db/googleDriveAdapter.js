@@ -40,25 +40,20 @@ class GoogleDriveAdapter {
   }
 
   async write(data) {
-    try {
-      const bufferStream = new stream.PassThrough()
+    const bufferStream = new stream.PassThrough()
 
-      const dataStringify = JSON.stringify(data, null, 2) 
-      const dataString = typeof data === 'string' ? data : dataStringify
+    const dataStringify = JSON.stringify(data, null, 2) 
+    const dataString = typeof data === 'string' ? data : dataStringify
 
-      bufferStream.end(Buffer.from(dataString, 'utf-8'))
+    bufferStream.end(Buffer.from(dataString, 'utf-8'))
 
-      await this.drive.files.update({
-        fileId: this.fileId,
-        media: {
-          mimeType: 'application/json',
-          body: bufferStream,
-        },
-      })
-    } catch (error) {
-      console.error('Erro ao gravar arquivo no Google Drive:', error)
-      throw error
-    }
+    await this.drive.files.update({
+      fileId: this.fileId,
+      media: {
+        mimeType: 'application/json',
+        body: bufferStream,
+      },
+    })
   }
 }
 
