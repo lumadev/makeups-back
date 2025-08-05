@@ -1,5 +1,7 @@
 import { getAllMakeups, deleteMakeup, createMakeup, updateMakeup } from '../services/makeupService.js'
-import { validatePost, validatePut, validateDelete } from '../utils/makeupValidations.js'
+import { createMakeupDone } from '../services/makeupsDoneService.js'
+
+import { validatePost, validatePut, validateDelete, validateMarkAsDone } from '../utils/makeupValidations.js'
 import { verifyToken } from '../middlewares/authMiddleware.js'
 
 import express from 'express'
@@ -30,8 +32,22 @@ router.put('/:id', validatePut, async (req, res) => {
   res.json(updatedMakeup)
 })
 
+router.put('/:id/mark-as-done', validateMarkAsDone, async (req, res) => {
+  const makeup = req.makeup
+  const makeupId = makeup.id
+
+  // create a makeup in makeups-done database
+  await createMakeupDone(makeup)
+
+  // delete the makeup in makeups database
+  await deleteMakeup(makeupId)
+
+  res.status(200).json({ message: 'Reposição marcada como concluída' })
+})
+
 router.delete('/:id', validateDelete, async (req, res) => {
-  await deleteMakeup(req.params.id)
+  const makeupId = req.params.id
+  await deleteMakeup(makeupId)
   
   res.status(200).json({ message: 'Reposição removida com sucesso' })
 })

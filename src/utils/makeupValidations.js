@@ -92,6 +92,18 @@ async function validatePut(req, res, next) {
   next()
 }
 
+async function validateMarkAsDone(req, res, next) {
+  const makeupId = Number(req.params.id)
+
+  const makeup = await getMakeupById(makeupId)
+  if (!makeup) {
+    return res.status(404).json({ error: 'Reposição não encontrada' })
+  }
+  req.makeup = makeup
+
+  next()
+}
+
 async function validateDelete(req, res, next) {
   const makeupId = Number(req.params.id)
 
@@ -103,4 +115,9 @@ async function validateDelete(req, res, next) {
   next()
 }
 
-export { validatePost, validatePut, validateDelete }
+export { 
+  validatePost,
+  validatePut,
+  validateMarkAsDone,
+  validateDelete
+}
