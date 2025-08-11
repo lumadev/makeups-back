@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser'
 import studentsRoutes from './src/routes/students.js'
 import makeupsRoutes from './src/routes/makeups.js'
 import makeupsDoneRoutes from './src/routes/makeupsDone.js'
+import eventDatesRoutes from './src/routes/eventDates.js'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`
@@ -34,6 +35,7 @@ app.set('trust proxy', 1)
 app.use('/students', studentsRoutes)
 app.use('/makeups', makeupsRoutes)
 app.use('/makeups-done', makeupsDoneRoutes)
+app.use('/event-dates', eventDatesRoutes)
 app.use('/auth', authRoutes)
 
 app.listen(port)
