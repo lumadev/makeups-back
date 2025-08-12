@@ -18,6 +18,7 @@ function getFileIdByType(dbType) {
   const idFileMakeups = '15cf_lJNK569Nq0LGPyHhp-61Og2iVrNtT8MnRwhjyMs'
   const idFileMakeupsDone = '1uufJ-0BVJSBTlJFCGb8eNie32vRlC8buEc11jcDXpGY'
   const idFileStudents = '1G4Qv_hBakFICCUmLs7wLc2h5i1t_ki2t_-gsqVGzmrs'
+  const idFileDateEvents = '11YGauy7RjGEAXgolvL7xFMqMP18Bii-_DbefZRhEaqQ'
 
   if (dbType === dbTypes.DB_TYPE_MAKEUPS) {
     return idFileMakeups
@@ -25,6 +26,8 @@ function getFileIdByType(dbType) {
     return idFileMakeupsDone
   } else if (dbType === dbTypes.DB_TYPE_STUDENTS) {
     return idFileStudents
+  } else if (dbType === dbTypes.DB_TYPE_EVENT_DATES) {
+    return idFileDateEvents
   }
 }
 
