@@ -5,7 +5,7 @@ async function getAllEventDates() {
   const db = await initDB(DB_TYPE_EVENT_DATES)
 
   await db.read()
-  return db.data.eventDate || []
+  return db.data.eventDates || []
 }
 
 async function getEventDateById(id) {
