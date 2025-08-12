@@ -28,7 +28,7 @@ async function validatePut(req, res, next) {
   }
   req.eventDate = eventDate
 
-  const { initialDate, finalDate, observation } = req.body
+  const { initialDate, finalDate, observations } = req.body
 
   if (initialDate && !validateDate(initialDate)) {
     return res.status(400).json({ error: 'Data inicial inválida' })
@@ -38,7 +38,7 @@ async function validatePut(req, res, next) {
     return res.status(400).json({ error: 'Data final inválida' })
   }
 
-  if (observation.length > 450) {
+  if (observations.length > 450) {
     return res.status(400).json({ error: 'O máximo de caracteres da observação é 450' })
   }
   next()
