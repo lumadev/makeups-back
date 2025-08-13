@@ -1,13 +1,19 @@
 import { errorFieldsRequired, validateDate, errorsDate } from '../utils/validations.js'
 import { getEventDateById } from '../services/datesService.js'
 
+const requiredFields = {
+  description: "Descrição",
+  initialDate: 'Data inicial',
+  finalDate: 'Data final',
+}
+
 const eventDateFields = {
   initialDate: 'Data inicial',
   finalDate: 'Data final',
 }
 
 async function validatePost(req, res, next) {
-  const errorRequired = errorFieldsRequired(req.body, eventDateFields)
+  const errorRequired = errorFieldsRequired(req.body, requiredFields)
   if (errorRequired) {
     return res.status(400).json({ error: errorRequired })
   }

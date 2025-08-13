@@ -18,10 +18,11 @@ router.get('/', async (req, res) => {
 
 router.post('/', validatePost, async (req, res) => {
   const db = await initDB(DB_TYPE_EVENT_DATES)
-  const { initialDate, finalDate, observations } = req.body
+  const { description, initialDate, finalDate, observations } = req.body
 
   const newEventDate = {
     id: Date.now(),
+    description,
     initialDate,
     finalDate,
     observations
@@ -43,7 +44,7 @@ router.put('/:id', validatePut, async (req, res) => {
   const db = await initDB(DB_TYPE_EVENT_DATES) 
   const eventId = Number(req.params.id)
 
-  const { initialDate, finalDate, observations } = req.body
+  const { description, initialDate, finalDate, observations } = req.body
 
   await db.read()
   db.data.eventDates = db.data.eventDates || []
@@ -52,6 +53,7 @@ router.put('/:id', validatePut, async (req, res) => {
 
   db.data.eventDates[index] = {
     ...db.data.eventDates[index],
+    description,
     initialDate,
     finalDate,
     observations
