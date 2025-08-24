@@ -1,6 +1,15 @@
 import { initDB } from '../db/db.js'
 import { DB_TYPE_JOKES } from '../db/dbTypeConsts.js'
 
+async function getAllJokes() {
+  const db = await initDB(DB_TYPE_JOKES)
+
+  await db.read()
+  const jokes = db.data.jokes || []
+
+  return jokes
+}
+
 async function getRandomJoke() {
   const db = await initDB(DB_TYPE_JOKES)
 
@@ -16,4 +25,4 @@ async function getRandomJoke() {
   return jokes[randomIndex]
 }
 
-export { getRandomJoke }
+export { getRandomJoke, getAllJokes }
