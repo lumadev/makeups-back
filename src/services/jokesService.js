@@ -25,4 +25,27 @@ async function getRandomJoke() {
   return jokes[randomIndex]
 }
 
-export { getRandomJoke, getAllJokes }
+async function deleteJoke(jokeIdParam) {
+  const db = await initDB(DB_TYPE_JOKES)
+  const jokeId = Number(jokeIdParam)
+
+  await db.read()
+  db.data.jokes = db.data.jokes || []
+
+  const index = db.data.jokes.findIndex(makeup => makeup.id === jokeId)
+  db.data.jokes.splice(index, 1)
+
+  await db.write()
+}
+
+async function getJokeById(id) {
+  const jokes = await getAllJokes()
+  return jokes.find(r => String(r.id) === String(id)) || null
+}
+
+export { 
+  getRandomJoke,
+  getAllJokes,
+  deleteJoke,
+  getJokeById
+}
