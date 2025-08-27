@@ -1,4 +1,6 @@
 import { comparePasswords, generateToken } from '../utils/auth.js'
+import { getAllUsers } from '../services/usersService.js'
+
 import express from 'express'
 import dotenv from 'dotenv'
 
@@ -8,23 +10,22 @@ dotenv.config({
 
 const router = express.Router()
 
-const USERNAME = String(process.env.USERNAME_MAKEUPS)
-const PASSWORD_HASH = String(process.env.PASSWORD_MAKEUPS)
-
 router.post('/login', async (req, res) => {
+  const users = await getAllUsers()
+
   const { username, password } = req.body
 
-  let passwordValid = false
-
-  if (username === USERNAME) {
-    passwordValid = await comparePasswords(password, PASSWORD_HASH)
-  }
-
-  if (username !== USERNAME || !passwordValid) {
+  // check if username exists in database
+  const user = users.find(u => u.username === username)
+  if (!user) {
     return res.status(401).json({ error: 'Credenciais inválidas' })
   }
 
-  const user = { username: USERNAME }
+  // check if password is correct
+  const passwordValid = await comparePasswords(password, user.pass)
+  if (!passwordValid) {
+    return res.status(401).json({ error: 'Credenciais inválidas' })
+  }
 
   const token = generateToken(user)
 
