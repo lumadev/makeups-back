@@ -8,6 +8,7 @@ const comparePasswords = async (plain, hashed) => {
 const generateToken = (user) => {
   const SECRET = process.env.SECRET
   const payload = { 
+    id: user.id,
     username: user.username,
     type: user.type
   }
