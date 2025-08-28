@@ -7,11 +7,9 @@ const comparePasswords = async (plain, hashed) => {
 
 const generateToken = (user) => {
   const SECRET = process.env.SECRET
-  const payload = { 
-    id: user.id,
-    username: user.username,
-    type: user.type
-  }
+
+  const { id, username, name, type } = user
+  const payload = { id, username, name, type }
 
   return jwt.sign(payload, SECRET, {
     expiresIn: '8h',

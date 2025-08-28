@@ -28,6 +28,7 @@ router.post('/login', async (req, res) => {
   }
 
   const token = generateToken(user)
+  const { type, name } = user
 
   res.cookie('token', token, {
     httpOnly: true,
@@ -36,7 +37,7 @@ router.post('/login', async (req, res) => {
     maxAge: 8 * 60 * 60 * 1000, // 8 horas
   })
 
-  res.json({ token })
+  res.json({ token, name, type })
 })
 
 export default router
