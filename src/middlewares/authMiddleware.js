@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-function verifyToken(req, res, next) {
+function getUserFromToken(req, res, next) {
   // Get from httpOnly cookie
   const token = req.cookies?.token
 
@@ -17,4 +17,19 @@ function verifyToken(req, res, next) {
   }
 }
 
-export { verifyToken }
+function requireRole(role) {
+  return function (req, res, next) {
+    const user = req.user
+
+    // role pode ser string ou array de roles permitidas
+    const roles = Array.isArray(role) ? role : [role]
+
+    if (!roles.includes(user.type)) {
+      return res.status(403).json({ error: 'Acesso negado' })
+    }
+
+    next()
+  }
+}
+
+export { getUserFromToken, requireRole }

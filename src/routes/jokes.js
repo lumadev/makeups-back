@@ -1,5 +1,5 @@
 import { getRandomJoke, getAllJokes, deleteJoke } from '../services/jokesService.js'
-import { verifyToken } from '../middlewares/authMiddleware.js'
+import { getUserFromToken } from '../middlewares/authMiddleware.js'
 
 import { validateDelete } from '../utils/jokeValidations.js'
 
@@ -7,7 +7,7 @@ import express from 'express'
 
 const router = express.Router()
 
-router.use(verifyToken)
+router.use(getUserFromToken)
 
 router.get('/', async (req, res) => {
   const jokes = await getAllJokes()

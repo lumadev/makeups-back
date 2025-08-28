@@ -1,6 +1,6 @@
 import { getAllEventDates } from '../services/datesService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/eventDateValidation.js'
-import { verifyToken } from '../middlewares/authMiddleware.js'
+import { getUserFromToken } from '../middlewares/authMiddleware.js'
 
 import { DB_TYPE_EVENT_DATES } from '../db/dbTypeConsts.js'
 import { initDB } from '../db/db.js'
@@ -9,7 +9,7 @@ import express from 'express'
 
 const router = express.Router()
 
-router.use(verifyToken)
+router.use(getUserFromToken)
 
 router.get('/', async (req, res) => {
   const dates = await getAllEventDates()

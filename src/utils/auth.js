@@ -7,19 +7,22 @@ const comparePasswords = async (plain, hashed) => {
 
 const generateToken = (user) => {
   const SECRET = process.env.SECRET
-  const payload = { username: user.username }
+  const payload = { 
+    username: user.username,
+    type: user.type
+  }
 
   return jwt.sign(payload, SECRET, {
     expiresIn: '8h',
   })
 }
 
-const verifyToken = (token) => {
+const getUserFromToken = (token) => {
   return jwt.verify(token, process.env.SECRET)
 }
 
 export {
   comparePasswords,
   generateToken,
-  verifyToken,
+  getUserFromToken,
 }
