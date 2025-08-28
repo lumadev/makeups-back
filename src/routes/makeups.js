@@ -2,13 +2,13 @@ import { getAllMakeups, deleteMakeup, createMakeup, updateMakeup } from '../serv
 import { createMakeupDone } from '../services/makeupsDoneService.js'
 
 import { validatePost, validatePut, validateDelete, validateMarkAsDone } from '../utils/makeupValidations.js'
-import { getUserFromToken } from '../middlewares/authMiddleware.js'
+import { verifyToken } from '../middlewares/authMiddleware.js'
 
 import express from 'express'
 
 const router = express.Router()
 
-router.use(getUserFromToken)
+router.use(verifyToken)
 
 router.get('/', async (req, res) => {
   const makeups = await getAllMakeups()

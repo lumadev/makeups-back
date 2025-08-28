@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-function getUserFromToken(req, res, next) {
+function verifyToken(req, res, next) {
   // Get from httpOnly cookie
   const token = req.cookies?.token
 
@@ -32,4 +32,4 @@ function requireRole(role) {
   }
 }
 
-export { getUserFromToken, requireRole }
+export { verifyToken, requireRole }
