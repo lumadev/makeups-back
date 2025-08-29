@@ -1,6 +1,6 @@
 import { getAllStudents } from '../services/studentService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/studentValidations.js'
-import { verifyToken } from '../middlewares/authMiddleware.js'
+import { verifyToken, requireRole } from '../middlewares/authMiddleware.js'
 
 import { DB_TYPE_STUDENTS } from '../db/dbTypeConsts.js'
 import { initDB } from '../db/db.js'
@@ -10,6 +10,7 @@ import express from 'express'
 const router = express.Router()
 
 router.use(verifyToken)
+router.use(requireRole(['full']))
 
 router.get('/', async (req, res) => {
   const students = await getAllStudents()

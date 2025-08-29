@@ -21,13 +21,17 @@ function requireRole(role) {
   return function (req, res, next) {
     const user = req.user
 
+    if (user.type === 'admin') {
+      next()
+      return
+    }
+
     // role pode ser string ou array de roles permitidas
     const roles = Array.isArray(role) ? role : [role]
 
     if (!roles.includes(user.type)) {
       return res.status(403).json({ error: 'Acesso negado' })
     }
-
     next()
   }
 }
