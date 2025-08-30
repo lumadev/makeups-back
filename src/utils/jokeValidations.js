@@ -11,6 +11,10 @@ async function validatePost(req, res, next) {
   if (errorRequired) {
     return res.status(400).json({ error: errorRequired })
   }
+
+  if (req.body.description.length > 300) {
+    return res.status(400).json({ error: 'Descrição não pode ter mais de 300 caracteres' })
+  }
   next()
 }
 

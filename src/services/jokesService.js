@@ -36,10 +36,10 @@ async function createJoke(body, userId) {
   const { description, type } = body
 
   const jokes = db.data.jokes
-  const lastIndex = jokes.length - 1
+  const newIndex = jokes[0].id + 1
 
   const newJoke = {
-    id: lastIndex + 1,
+    id: newIndex,
     description,
     type,
     userId
