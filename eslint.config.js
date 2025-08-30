@@ -10,7 +10,8 @@ export default defineConfig([
     ignores: [
       'node_modules/**',
       'dist/**',
-      'eslint.config.js'
+      'eslint.config.js',
+      '.history/**'
     ],
     languageOptions: {
       ecmaVersion: 'latest',
