@@ -1,4 +1,9 @@
-import { getAllStudents, createStudent, updateStudent, deleteStudent } from '../services/studentService.js'
+import { 
+  getAllStudents,
+  createStudent,
+  updateStudent,
+  deleteStudent
+} from '../services/studentService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/studentValidations.js'
 import { verifyToken, requireRole } from '../middlewares/authMiddleware.js'
 

@@ -1,4 +1,9 @@
-import { getAllStudentSongs, createStudentSong, updateStudentSong, deleteStudentSong } from '../services/studentSongsService.js'
+import {
+  getAllStudentSongs,
+  createStudentSong,
+  updateStudentSong,
+  deleteStudentSong
+} from '../services/studentSongsService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/studentSongsValidations.js'
 import { verifyToken, requireRole } from '../middlewares/authMiddleware.js'
 
