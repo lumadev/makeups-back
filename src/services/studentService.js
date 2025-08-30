@@ -68,9 +68,9 @@ async function deleteStudent(studentId) {
   await db.write()
 }
 
-async function getStudentById(id) {
+async function getStudentById(studentId) {
   const students = await getAllStudents()
-  return students.find(r => String(r.id) === String(id)) || null
+  return students.find(r => String(r.id) === String(studentId)) || null
 }
 
 export { 

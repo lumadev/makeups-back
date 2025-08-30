@@ -58,14 +58,27 @@ async function updateEventDate(eventId, body){
   return eventDateUpdated
 }
 
-async function getEventDateById(id) {
+async function deleteEventDate(eventId) {
+  const db = await initDB(DB_TYPE_EVENT_DATES)
+
+  await db.read()
+  db.data.eventDates = db.data.eventDates || []
+
+  const index = db.data.eventDates.findIndex(eventDate => eventDate.id === eventId)
+  db.data.eventDates.splice(index, 1)
+
+  await db.write()
+}
+
+async function getEventDateById(eventId) {
   const dates = await getAllEventDates()
-  return dates.find(r => String(r.id) === String(id)) || null
+  return dates.find(r => String(r.id) === String(eventId)) || null
 }
 
 export { 
   getAllEventDates, 
   createEventDate,
   updateEventDate,
+  deleteEventDate,
   getEventDateById
 }

@@ -1,9 +1,11 @@
-import { getAllEventDates, createEventDate, updateEventDate } from '../services/datesService.js'
+import { 
+  getAllEventDates,
+  createEventDate,
+  updateEventDate,
+  deleteEventDate
+} from '../services/datesService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/eventDateValidation.js'
 import { verifyToken, requireRole } from '../middlewares/authMiddleware.js'
-
-import { DB_TYPE_EVENT_DATES } from '../db/dbTypeConsts.js'
-import { initDB } from '../db/db.js'
 
 import { getUserFromToken } from '../utils/auth.js' 
 
@@ -45,16 +47,8 @@ router.put('/:id', validatePut, async (req, res) => {
 })
 
 router.delete('/:id', validateDelete, async (req, res) => {
-  const db = await initDB(DB_TYPE_EVENT_DATES)
-  const eventDateId = Number(req.params.id)
-
-  await db.read()
-  db.data.eventDates = db.data.eventDates || []
-
-  const index = db.data.eventDates.findIndex(eventDate => eventDate.id === eventDateId)
-  db.data.eventDates.splice(index, 1)
-
-  await db.write()
+  const eventId = Number(req.params.id)
+  await deleteEventDate(eventId)
 
   res.status(200).json({ message: 'Data de evento removida com sucesso' })
 })
