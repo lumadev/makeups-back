@@ -18,19 +18,18 @@ router.get('/', async (req, res) => {
 
 router.post('/', validatePost, async (req, res) => {
   const newMakeup = await createMakeup(req.body, req.student.name)
-
   res.status(201).json(newMakeup)
 })
 
 router.put('/:id', validatePut, async (req, res) => {
-  const idMakeup = req.params.id
+  const idMakeup = Number(req.params.id)
   const body = req.body
   const makeup = req.makeup
   const studentName = makeup.studentName
 
-  const updatedMakeup = updateMakeup(idMakeup, body, makeup, studentName)
+  const updatedMakeup = await updateMakeup(idMakeup, body, makeup, studentName)
 
-  res.json(updatedMakeup)
+  res.status(200).json(updatedMakeup)
 })
 
 router.put('/:id/mark-as-done', validateMarkAsDone, async (req, res) => {

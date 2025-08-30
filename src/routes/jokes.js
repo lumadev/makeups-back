@@ -32,7 +32,7 @@ router.post('/', validatePost, async (req, res) => {
 })
 
 router.delete('/:id', validateDelete, async (req, res) => {
-  const jokeId = req.params.id
+  const jokeId = Number(req.params.id)
   await deleteJoke(jokeId)
   
   res.status(200).json({ message: 'Piada removida com sucesso' })
