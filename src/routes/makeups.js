@@ -46,7 +46,7 @@ router.put('/:id/mark-as-done', validateMarkAsDone, async (req, res) => {
 })
 
 router.delete('/:id', validateDelete, async (req, res) => {
-  const makeupId = req.params.id
+  const makeupId = Number(req.params.id)
   await deleteMakeup(makeupId)
   
   res.status(200).json({ message: 'Reposição removida com sucesso' })

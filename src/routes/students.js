@@ -27,7 +27,7 @@ router.put('/:id', validatePut, async (req, res) => {
 })
 
 router.delete('/:id', validateDelete, async (req, res) => {
-  const studentId = req.params.id
+  const studentId = Number(req.params.id)
   await deleteStudent(studentId)
 
   res.status(200).json({ message: 'Aluno removido com sucesso' })
