@@ -1,4 +1,4 @@
-import { getAllEventDates } from '../services/datesService.js'
+import { getAllEventDates, createEventDate, updateEventDate } from '../services/datesService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/eventDateValidation.js'
 import { verifyToken, requireRole } from '../middlewares/authMiddleware.js'
 
@@ -25,65 +25,23 @@ router.get('/', async (req, res) => {
   }
 
   const userDates = eventDates.filter(event => event.userIds?.includes(user.id))
-  res.json(userDates)
+  res.status(200).json(userDates)
 })
 
 router.post('/', validatePost, async (req, res) => {
   const token = req.cookies?.token
   const user = getUserFromToken(token)
 
-  const db = await initDB(DB_TYPE_EVENT_DATES)
-  const { description, initialDate, finalDate, observations } = req.body
-
-  const newEventDate = {
-    id: Date.now(),
-    description,
-    initialDate,
-    finalDate,
-    observations,
-    userIds: [user.id]
-  }
-
-  await db.read()
-  const eventDates = await getAllEventDates()
-
-  db.data.eventDates = eventDates
-  db.data.eventDates.unshift(newEventDate)
-
-  await db.write()
+  const newEventDate = await createEventDate(req.body, user)
 
   res.status(201).json(newEventDate)
 })
 
 router.put('/:id', validatePut, async (req, res) => {
-  const db = await initDB(DB_TYPE_EVENT_DATES) 
   const eventId = Number(req.params.id)
+  const eventDateUpdated = await updateEventDate(eventId, req.body)
 
-  const { description, initialDate, finalDate, observations } = req.body
-
-  await db.read()
-  db.data.eventDates = db.data.eventDates || []
-
-  const index = db.data.eventDates.findIndex(s => s.id === eventId)
-
-  if (index === -1) {
-    return res.status(404).json({ error: 'Evento não encontrado' })
-  }
-
-  const existingEvent = db.data.eventDates[index]
-
-  db.data.eventDates[index] = {
-    ...existingEvent,
-    description,
-    initialDate,
-    finalDate,
-    observations,
-    userIds: existingEvent.userIds
-  }
-  const eventDateUpdated = db.data.eventDates[index]
-
-  await db.write()
-  res.json(eventDateUpdated)
+  res.status(200).json(eventDateUpdated)
 })
 
 router.delete('/:id', validateDelete, async (req, res) => {
