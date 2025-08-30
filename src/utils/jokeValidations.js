@@ -11,15 +11,6 @@ async function validatePost(req, res, next) {
   if (errorRequired) {
     return res.status(400).json({ error: errorRequired })
   }
-
-  const { jokeId } = req.body
-
-  const joke = await getJokeById(jokeId)
-  if (!joke) {
-    return res.status(404).json({ error: 'Piada não encontrada' })
-  }
-  req.joke = joke
-
   next()
 }
 

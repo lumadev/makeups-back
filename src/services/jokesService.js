@@ -44,7 +44,6 @@ async function createJoke(body, userId) {
     type,
     userId
   }
-
   await db.read()
 
   db.data.jokes = jokes || []
