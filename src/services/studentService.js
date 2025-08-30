@@ -56,6 +56,18 @@ async function updateStudent(studentId, body) {
   return studentUpdated
 }
 
+async function deleteStudent(studentId) {
+  const db = await initDB(DB_TYPE_STUDENTS)
+
+  await db.read()
+  db.data.alunos = db.data.alunos || []
+
+  const index = db.data.alunos.findIndex(student => student.id === studentId)
+  db.data.alunos.splice(index, 1)
+
+  await db.write()
+}
+
 async function getStudentById(id) {
   const students = await getAllStudents()
   return students.find(r => String(r.id) === String(id)) || null
@@ -65,5 +77,6 @@ export {
   getAllStudents, 
   createStudent,
   updateStudent,
+  deleteStudent,
   getStudentById
 }
