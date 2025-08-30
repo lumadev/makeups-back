@@ -25,6 +25,36 @@ async function getRandomJoke() {
   return jokes[randomIndex]
 }
 
+/**
+ * @param {object} body body from request
+ * 
+ * @returns {object} newJose
+ */
+async function createJoke(body, userId) {
+  const db = await initDB(DB_TYPE_JOKES)
+  
+  const { description, type } = body
+
+  const jokes = db.data.jokes
+  const lastIndex = jokes.length - 1
+
+  const newJoke = {
+    id: lastIndex + 1,
+    description,
+    type,
+    userId
+  }
+
+  await db.read()
+
+  db.data.jokes = jokes || []
+  db.data.jokes.unshift(newJoke)
+
+  await db.write()
+
+  return newJoke
+}
+
 async function deleteJoke(jokeIdParam) {
   const db = await initDB(DB_TYPE_JOKES)
   const jokeId = Number(jokeIdParam)
@@ -46,6 +76,7 @@ async function getJokeById(id) {
 export { 
   getRandomJoke,
   getAllJokes,
+  createJoke,
   deleteJoke,
   getJokeById
 }
