@@ -5,7 +5,6 @@ import { getStudentById } from '../services/studentService.js'
 const requiredFields = {
   songName: 'Nome da música',
   artist: 'Artista',
-  studentId: 'Aluno',
   isRecital: "Recital",
   isMusicAudition: "Música da Audição"
 }
@@ -13,6 +12,17 @@ const requiredFields = {
 const maxLengths = {
   songName: 150,
   artist: 100
+}
+
+async function validateGet(req, res, next) {
+  const studentId = Number(req.params.studentId)
+
+  const student = await getStudentById(studentId)
+  if (!student) {
+    return res.status(404).json({ error: 'Aluno não encontrado' })
+  }
+
+  next()
 }
 
 async function validatePost(req, res, next) {
@@ -26,7 +36,7 @@ async function validatePost(req, res, next) {
     return res.status(400).json({ error: lengthError })
   }
 
-  const studentId = Number(req.body.studentId)
+  const studentId = Number(req.params.studentId)
 
   const student = await getStudentById(studentId)
   if (!student) {
@@ -53,7 +63,7 @@ async function validatePut(req, res, next) {
     return res.status(404).json({ error: 'Música não encontrada' })
   }
 
-  const studentId = Number(req.body.studentId)
+  const studentId = Number(req.params.studentId)
 
   const student = await getStudentById(studentId)
   if (!student) {
@@ -74,4 +84,9 @@ async function validateDelete(req, res, next) {
   next()
 }
 
-export { validatePost, validatePut, validateDelete }
+export { 
+  validateGet,
+  validatePost,
+  validatePut,
+  validateDelete
+}
