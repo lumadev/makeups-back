@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import authRoutes from './src/routes/auth.js'
 import cookieParser from 'cookie-parser'
 import studentsRoutes from './src/routes/students.js'
+import studentSongsRoutes from './src/routes/studentSongs.js'
 import makeupsRoutes from './src/routes/makeups.js'
 import makeupsDoneRoutes from './src/routes/makeupsDone.js'
 import eventDatesRoutes from './src/routes/eventDates.js'
@@ -33,6 +34,7 @@ app.set('trust proxy', 1)
 
 // Usa os arquivos de rota
 app.use('/students', studentsRoutes)
+app.use('/student-songs', studentSongsRoutes)
 app.use('/makeups', makeupsRoutes)
 app.use('/makeups-done', makeupsDoneRoutes)
 app.use('/event-dates', eventDatesRoutes)
