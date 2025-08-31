@@ -2,7 +2,8 @@ import {
   getAllStudents,
   createStudent,
   updateStudent,
-  deleteStudent
+  deleteStudent,
+  getStudentById
 } from '../services/studentService.js'
 import { validatePost, validatePut, validateDelete } from '../utils/studentValidations.js'
 import { verifyToken, requireRole } from '../middlewares/authMiddleware.js'
@@ -17,6 +18,17 @@ router.use(requireRole(['full']))
 router.get('/', async (req, res) => {
   const students = await getAllStudents()
   res.json(students)
+})
+
+router.get('/:id', async (req, res) => {
+  const studentId = Number(req.params.id)
+  const student = await getStudentById(studentId)
+
+  if (!student) {
+    return res.status(404).json({ message: 'Aluno não encontrado' })
+  }
+
+  res.json(student)
 })
 
 router.post('/', validatePost, async (req, res) => {
