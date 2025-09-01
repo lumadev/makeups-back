@@ -5,8 +5,6 @@ import { getStudentById } from '../services/studentService.js'
 const requiredFields = {
   songName: 'Nome da música',
   artist: 'Artista',
-  isRecital: "Recital",
-  isMusicAudition: "Música da Audição"
 }
 
 const maxLengths = {
