@@ -17,13 +17,14 @@ async function getStudentSongsByStudent(studentId) {
 
 async function createStudentSong(studentId, body) {
   const db = await initDB(DB_TYPE_STUDENT_SONGS)
-  const { songName, artist, isRecital, isMusicAudition } = body
+  const { songName, artist, versionLink, isRecital, isMusicAudition } = body
 
   const newSong = {
     id: Date.now(),
     songName,
     artist,
     studentId,
+    versionLink,
     isRecital: Boolean(isRecital),
     isMusicAudition: Boolean(isMusicAudition),
     done: false,
@@ -44,7 +45,7 @@ async function createStudentSong(studentId, body) {
 async function updateStudentSong(studentId, songId, body) {
   const db = await initDB(DB_TYPE_STUDENT_SONGS)
 
-  const { songName, artist, isRecital, isMusicAudition, done } = body
+  const { songName, artist, versionLink, isRecital, isMusicAudition, done } = body
 
   await db.read()
   db.data.studentSongs = db.data.studentSongs || []
@@ -56,6 +57,7 @@ async function updateStudentSong(studentId, songId, body) {
     songName,
     artist,
     studentId,
+    versionLink,
     isRecital: Boolean(isRecital),
     isMusicAudition: Boolean(isMusicAudition),
     done: Boolean(done)

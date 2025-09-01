@@ -9,7 +9,8 @@ const requiredFields = {
 
 const maxLengths = {
   songName: 150,
-  artist: 100
+  artist: 100,
+  versionLink: 300
 }
 
 async function validateGet(req, res, next) {
