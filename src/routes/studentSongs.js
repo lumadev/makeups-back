@@ -1,5 +1,5 @@
 import {
-  getAllStudentSongs,
+  getStudentSongsByStudent,
   createStudentSong,
   updateStudentSong,
   deleteStudentSong
@@ -20,18 +20,24 @@ router.use(verifyToken)
 router.use(requireRole(['full']))
 
 router.get('/:studentId/songs', validateGet, async (req, res) => {
-  const studentSongs = await getAllStudentSongs()
+  const studentId = Number(req.params.studentId)
+  const studentSongs = await getStudentSongsByStudent(studentId)
+
   res.json(studentSongs)
 })
 
 router.post('/:studentId/songs', validatePost, async (req, res) => {
-  const newSong = await createStudentSong(req.body)
+  const studentId = Number(req.params.studentId)
+  const newSong = await createStudentSong(studentId, req.body)
+
   res.status(201).json(newSong)
 })
 
 router.put('/:studentId/songs/:id', validatePut, async (req, res) => {
   const songId = Number(req.params.id)
-  const updatedSong = await updateStudentSong(songId, req.body)
+  const studentId = Number(req.params.studentId)
+
+  const updatedSong = await updateStudentSong(studentId, songId, req.body)
 
   res.json(updatedSong)
 })

@@ -8,9 +8,16 @@ async function getAllStudentSongs() {
   return db.data.studentSongs || []
 }
 
-async function createStudentSong(body) {
+async function getStudentSongsByStudent(studentId) {
   const db = await initDB(DB_TYPE_STUDENT_SONGS)
-  const { songName, artist, studentId, isRecital, isMusicAudition } = body
+
+  await db.read()
+  return db.data.studentSongs.filter(res => res.studentId === studentId)
+}
+
+async function createStudentSong(studentId, body) {
+  const db = await initDB(DB_TYPE_STUDENT_SONGS)
+  const { songName, artist, isRecital, isMusicAudition } = body
 
   const newSong = {
     id: Date.now(),
@@ -34,10 +41,10 @@ async function createStudentSong(body) {
   return newSong
 }
 
-async function updateStudentSong(songId, body) {
+async function updateStudentSong(studentId, songId, body) {
   const db = await initDB(DB_TYPE_STUDENT_SONGS)
 
-  const { songName, artist, studentId, isRecital, isMusicAudition, done } = body
+  const { songName, artist, isRecital, isMusicAudition, done } = body
 
   await db.read()
   db.data.studentSongs = db.data.studentSongs || []
@@ -80,6 +87,7 @@ async function getStudentSongById(songId) {
 
 export { 
   getAllStudentSongs,
+  getStudentSongsByStudent,
   createStudentSong,
   updateStudentSong,
   deleteStudentSong,
