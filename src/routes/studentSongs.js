@@ -23,7 +23,7 @@ router.get('/:studentId/songs', validateGet, async (req, res) => {
   const studentId = Number(req.params.studentId)
   const studentSongs = await getStudentSongsByStudent(studentId)
 
-  res.json(studentSongs)
+  res.status(200).json(studentSongs)
 })
 
 router.post('/:studentId/songs', validatePost, async (req, res) => {
@@ -43,7 +43,7 @@ router.put('/:studentId/songs/:id', validatePut, async (req, res) => {
 })
 
 router.delete('/:studentId/songs/:id', validateDelete, async (req, res) => {
-  const studentSongId = req.params.id
+  const studentSongId = Number(req.params.id)
   await deleteStudentSong(studentSongId)
 
   res.status(200).json({ message: 'Música removida com sucesso' })
