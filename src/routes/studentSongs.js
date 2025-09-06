@@ -1,6 +1,7 @@
 import {
   getStudentSongsByStudent,
   getStudentSongsDone,
+  getStudentSongsNotDone,
   createStudentSong,
   updateStudentSong,
   deleteStudentSong
@@ -34,6 +35,13 @@ router.get('/:studentId/songs-done', validateGet, async (req, res) => {
   res.status(200).json(studentSongs)
 })
 
+router.get('/:studentId/songs-not-done', validateGet, async (req, res) => {
+  const studentId = Number(req.params.studentId)
+  const studentSongs = await getStudentSongsNotDone(studentId)
+
+  res.status(200).json(studentSongs)
+})
+
 router.post('/:studentId/songs', validatePost, async (req, res) => {
   const studentId = Number(req.params.studentId)
   const newSong = await createStudentSong(studentId, req.body)
@@ -47,7 +55,7 @@ router.put('/:studentId/songs/:id', validatePut, async (req, res) => {
 
   const updatedSong = await updateStudentSong(studentId, songId, req.body)
 
-  res.json(updatedSong)
+  res.status(200).json(updatedSong)
 })
 
 router.delete('/:studentId/songs/:id', validateDelete, async (req, res) => {

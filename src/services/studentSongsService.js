@@ -19,8 +19,23 @@ async function getStudentSongsDone(studentId) {
   const db = await initDB(DB_TYPE_STUDENT_SONGS)
 
   await db.read()
-  return db.data.studentSongs.filter(res => {
-    res.studentId === studentId && res.done === true
+
+  const studentSongs = db.data.studentSongs
+
+  return studentSongs.filter(res => {
+    return res.studentId === studentId && res.done === true
+  })
+}
+
+async function getStudentSongsNotDone(studentId) {
+  const db = await initDB(DB_TYPE_STUDENT_SONGS)
+
+  await db.read()
+
+  const studentSongs = db.data.studentSongs
+
+  return studentSongs.filter(res => {
+    return res.studentId === studentId && res.done === false
   })
 }
 
@@ -100,6 +115,7 @@ export {
   getAllStudentSongs,
   getStudentSongsByStudent,
   getStudentSongsDone,
+  getStudentSongsNotDone,
   createStudentSong,
   updateStudentSong,
   deleteStudentSong,
