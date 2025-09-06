@@ -15,6 +15,15 @@ async function getStudentSongsByStudent(studentId) {
   return db.data.studentSongs.filter(res => res.studentId === studentId)
 }
 
+async function getStudentSongsDone(studentId) {
+  const db = await initDB(DB_TYPE_STUDENT_SONGS)
+
+  await db.read()
+  return db.data.studentSongs.filter(res => {
+    res.studentId === studentId && res.done === true
+  })
+}
+
 async function createStudentSong(studentId, body) {
   const db = await initDB(DB_TYPE_STUDENT_SONGS)
   const { songName, artist, versionLink, isRecital, isMusicAudition } = body
@@ -90,6 +99,7 @@ async function getStudentSongById(songId) {
 export { 
   getAllStudentSongs,
   getStudentSongsByStudent,
+  getStudentSongsDone,
   createStudentSong,
   updateStudentSong,
   deleteStudentSong,
