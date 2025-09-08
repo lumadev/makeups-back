@@ -8,9 +8,29 @@ async function getAllEventDates() {
   return db.data.eventDates || []
 }
 
+async function getEventDatesDone() {
+  const db = await initDB(DB_TYPE_EVENT_DATES)
+
+  await db.read()
+
+  const eventDates = db.data.eventDates
+
+  return eventDates.filter(res => res.done === true)
+}
+
+async function getEventDatesNotDone() {
+  const db = await initDB(DB_TYPE_EVENT_DATES)
+
+  await db.read()
+
+  const eventDates = db.data.eventDates
+
+  return eventDates.filter(res => res.done === false)
+}
+
 async function createEventDate(body, user) {
   const db = await initDB(DB_TYPE_EVENT_DATES)
-  const { description, initialDate, finalDate, observations } = body
+  const { description, initialDate, finalDate, observations, done } = body
 
   const newEventDate = {
     id: Date.now(),
@@ -18,6 +38,7 @@ async function createEventDate(body, user) {
     initialDate,
     finalDate,
     observations,
+    done,
     userIds: [user.id]
   }
 
@@ -35,7 +56,7 @@ async function createEventDate(body, user) {
 async function updateEventDate(eventId, body){
   const db = await initDB(DB_TYPE_EVENT_DATES) 
 
-  const { description, initialDate, finalDate, observations } = body
+  const { description, initialDate, finalDate, observations, done } = body
 
   await db.read()
   db.data.eventDates = db.data.eventDates || []
@@ -49,6 +70,7 @@ async function updateEventDate(eventId, body){
     initialDate,
     finalDate,
     observations,
+    done,
     userIds: existingEvent.userIds
   }
   const eventDateUpdated = db.data.eventDates[index]
@@ -77,6 +99,8 @@ async function getEventDateById(eventId) {
 
 export { 
   getAllEventDates, 
+  getEventDatesDone,
+  getEventDatesNotDone,
   createEventDate,
   updateEventDate,
   deleteEventDate,

@@ -1,5 +1,7 @@
 import { 
   getAllEventDates,
+  getEventDatesDone,
+  getEventDatesNotDone,
   createEventDate,
   updateEventDate,
   deleteEventDate
@@ -28,6 +30,18 @@ router.get('/', async (req, res) => {
 
   const userDates = eventDates.filter(event => event.userIds?.includes(user.id))
   res.status(200).json(userDates)
+})
+
+router.get('/events-done', async (req, res) => {
+  const eventDates = await getEventDatesDone()
+
+  res.status(200).json(eventDates)
+})
+
+router.get('/events-not-done', async (req, res) => {
+  const eventDates = await getEventDatesNotDone()
+
+  res.status(200).json(eventDates)
 })
 
 router.post('/', validatePost, async (req, res) => {
