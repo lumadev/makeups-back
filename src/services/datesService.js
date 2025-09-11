@@ -39,6 +39,7 @@ async function createEventDate(body, user) {
     finalDate,
     observations,
     done,
+    confirmed: false,
     userIds: [user.id]
   }
 
