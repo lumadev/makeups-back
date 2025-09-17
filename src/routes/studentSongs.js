@@ -1,4 +1,5 @@
 import {
+  getAllStudentSongs,
   getStudentSongsByStudent,
   getStudentSongsDone,
   getStudentSongsNotDone,
@@ -20,6 +21,12 @@ const router = express.Router()
 
 router.use(verifyToken)
 router.use(requireRole(['full']))
+
+router.get('/', async (req, res) => {
+  const studentSongs = await getAllStudentSongs()
+
+  res.status(200).json(studentSongs)
+})
 
 router.get('/:studentId/songs', validateGet, async (req, res) => {
   const studentId = Number(req.params.studentId)

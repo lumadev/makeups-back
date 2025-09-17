@@ -5,7 +5,8 @@ async function getAllStudentSongs() {
   const db = await initDB(DB_TYPE_STUDENT_SONGS)
 
   await db.read()
-  return db.data.studentSongs || []
+  
+  return db.data.studentSongs.filter(res => !res.studentName.includes("Luma Macagnan"))
 }
 
 async function getStudentSongsByStudent(studentId) {
