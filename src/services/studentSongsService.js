@@ -6,7 +6,7 @@ async function getAllStudentSongs() {
 
   await db.read()
   
-  return db.data.studentSongs.filter(res => !res.studentName.includes("Luma Macagnan"))
+  return db.data.studentSongs.filter(res => !res.studentName.includes("Luma"))
 }
 
 async function getStudentSongsByStudent(studentId) {
@@ -40,7 +40,7 @@ async function getStudentSongsNotDone(studentId) {
   })
 }
 
-async function createStudentSong(studentId, body) {
+async function createStudentSong(student, body) {
   const db = await initDB(DB_TYPE_STUDENT_SONGS)
   const { songName, artist, versionLink, isRecital, isMusicAudition } = body
 
@@ -48,7 +48,8 @@ async function createStudentSong(studentId, body) {
     id: Date.now(),
     songName,
     artist,
-    studentId,
+    studentId: student.id,
+    studentName: student.name,
     versionLink,
     isRecital: Boolean(isRecital),
     isMusicAudition: Boolean(isMusicAudition),

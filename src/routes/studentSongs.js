@@ -50,8 +50,8 @@ router.get('/:studentId/songs-not-done', validateGet, async (req, res) => {
 })
 
 router.post('/:studentId/songs', validatePost, async (req, res) => {
-  const studentId = Number(req.params.studentId)
-  const newSong = await createStudentSong(studentId, req.body)
+  const student = req.student
+  const newSong = await createStudentSong(student, req.body)
 
   res.status(201).json(newSong)
 })

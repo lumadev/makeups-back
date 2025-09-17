@@ -41,6 +41,7 @@ async function validatePost(req, res, next) {
   if (!student) {
     return res.status(404).json({ error: 'Aluno não encontrado' })
   }
+  req.student = student
 
   next()
 }
