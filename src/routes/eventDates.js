@@ -18,30 +18,30 @@ const router = express.Router()
 router.use(verifyToken)
 router.use(requireRole(['full']))
 
-router.get('/', async (req, res) => {
-  const token = req.cookies?.token
-  const user = getUserFromToken(token)
+const filterByUser = (events, user) => {
+  if (user.type === 'admin') return events
+  return events.filter(event => event.userIds?.includes(user.id))
+}
 
+router.get('/', async (req, res) => {
+  const user = getUserFromToken(req.cookies?.token)
   const eventDates = await getAllEventDates()
 
-  if (user.type === 'admin') {
-    return res.json(eventDates)
-  }
-
-  const userDates = eventDates.filter(event => event.userIds?.includes(user.id))
-  res.status(200).json(userDates)
+  res.json(filterByUser(eventDates, user))
 })
 
 router.get('/events-done', async (req, res) => {
+  const user = getUserFromToken(req.cookies?.token)
   const eventDates = await getEventDatesDone()
 
-  res.status(200).json(eventDates)
+  res.json(filterByUser(eventDates, user))
 })
 
 router.get('/events-not-done', async (req, res) => {
+  const user = getUserFromToken(req.cookies?.token)
   const eventDates = await getEventDatesNotDone()
 
-  res.status(200).json(eventDates)
+  res.json(filterByUser(eventDates, user))
 })
 
 router.post('/', validatePost, async (req, res) => {
