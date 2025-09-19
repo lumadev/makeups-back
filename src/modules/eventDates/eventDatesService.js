@@ -1,5 +1,5 @@
-import { initDB } from '../db/db.js'
-import { DB_TYPE_EVENT_DATES } from '../db/dbTypeConsts.js'
+import { initDB } from '../../db/db.js'
+import { DB_TYPE_EVENT_DATES } from '../../db/dbTypeConsts.js'
 
 async function getAllEventDates() {
   const db = await initDB(DB_TYPE_EVENT_DATES)

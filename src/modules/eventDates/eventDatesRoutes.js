@@ -5,11 +5,11 @@ import {
   createEventDate,
   updateEventDate,
   deleteEventDate
-} from '../services/datesService.js'
-import { validatePost, validatePut, validateDelete } from '../utils/eventDateValidation.js'
-import { verifyToken, requireRole } from '../middlewares/authMiddleware.js'
+} from './eventDatesService.js'
+import { validatePost, validatePut, validateDelete } from './eventDatesValidation.js'
+import { verifyToken, requireRole } from '../../middlewares/authMiddleware.js'
 
-import { getUserFromToken } from '../utils/auth.js' 
+import { getUserFromToken } from '../../utils/auth.js' 
 
 import express from 'express'
 

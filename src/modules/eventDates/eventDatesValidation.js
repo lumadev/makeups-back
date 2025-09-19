@@ -1,5 +1,5 @@
-import { errorFieldsRequired, validateDate, errorsDate } from '../utils/validations.js'
-import { getEventDateById } from '../services/datesService.js'
+import { errorFieldsRequired, validateDate, errorsDate } from '../../utils/validations.js'
+import { getEventDateById } from './eventDatesService.js'
 
 const requiredFields = {
   description: "Descrição",
