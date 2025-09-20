@@ -1,5 +1,5 @@
-import { getJokeById } from '../services/jokesService.js'
-import { errorFieldsRequired } from '../utils/validations.js'
+import { getJokeById } from './jokesService.js'
+import { errorFieldsRequired } from '../../utils/validations.js'
 
 const requiredFields = {
   description: 'Descrição',

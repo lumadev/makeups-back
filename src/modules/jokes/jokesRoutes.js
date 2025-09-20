@@ -1,7 +1,7 @@
-import { getRandomJoke, getAllJokes, deleteJoke, createJoke } from '../services/jokesService.js'
-import { verifyToken } from '../middlewares/authMiddleware.js'
-import { getUserFromToken } from '../utils/auth.js'
-import { validateDelete, validatePost } from '../utils/jokeValidations.js'
+import { getRandomJoke, getAllJokes, deleteJoke, createJoke } from './jokesService.js'
+import { verifyToken } from '../../middlewares/authMiddleware.js'
+import { getUserFromToken } from '../../utils/auth.js'
+import { validateDelete, validatePost } from './jokesValidations.js'
 
 import express from 'express'
 const router = express.Router()

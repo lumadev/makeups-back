@@ -9,7 +9,7 @@ import studentSongsRoutes from './src/routes/studentSongs.js'
 import makeupsRoutes from './src/routes/makeups.js'
 import makeupsDoneRoutes from './src/routes/makeupsDone.js'
 import eventDatesRoutes from './src/modules/eventDates/eventDatesRoutes.js'
-import jokesRoutes from './src/routes/jokes.js'
+import jokesRoutes from './src/modules/jokes/jokesRoutes.js'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`
