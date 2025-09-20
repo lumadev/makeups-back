@@ -1,8 +1,8 @@
-import { getAllMakeups, deleteMakeup, createMakeup, updateMakeup } from '../services/makeupService.js'
-import { createMakeupDone } from '../services/makeupsDoneService.js'
+import { getAllMakeups, deleteMakeup, createMakeup, updateMakeup } from './makeupsService.js'
+import { createMakeupDone } from '../../services/makeupsDoneService.js'
 
-import { validatePost, validatePut, validateDelete, validateMarkAsDone } from '../utils/makeupValidations.js'
-import { verifyToken, requireRole } from '../middlewares/authMiddleware.js'
+import { validatePost, validatePut, validateDelete, validateMarkAsDone } from './makeupsValidations.js'
+import { verifyToken, requireRole } from '../../middlewares/authMiddleware.js'
 
 import express from 'express'
 

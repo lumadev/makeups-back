@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser'
 import eventDatesRoutes from './src/modules/eventDates/eventDatesRoutes.js'
 import jokesRoutes from './src/modules/jokes/jokesRoutes.js'
 import makeupsDoneRoutes from './src/routes/makeupsDone.js'
-import makeupsRoutes from './src/routes/makeups.js'
+import makeupsRoutes from './src/modules/makeups/makeupsRoutes.js'
 import spotifyRoutes from './src/modules/spotify/spotifyRoutes.js'
 
 import studentsRoutes from './src/routes/students.js'
