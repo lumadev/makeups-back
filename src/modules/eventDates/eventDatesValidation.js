@@ -1,4 +1,4 @@
-import { errorFieldsRequired, validateDate, errorsDate } from '../../utils/validations.js'
+import { errorFieldsRequired, validateDate, errorsDate, checkMaxLengths } from '../../utils/validations.js'
 import { getEventDateById } from './eventDatesService.js'
 
 const requiredFields = {
@@ -10,6 +10,11 @@ const eventDateFields = {
   eventDate: 'Data do evento',
 }
 
+const maxLengths = {
+  observations: 5000,
+  link: 400
+}
+
 async function validatePost(req, res, next) {
   const body = req.body
 
@@ -18,16 +23,15 @@ async function validatePost(req, res, next) {
     return res.status(400).json({ error: errorRequired })
   }
 
+  const lengthError = checkMaxLengths(req.body, maxLengths)
+  if (lengthError) {
+    return res.status(400).json({ error: lengthError })
+  }
+
   const errorDate = errorsDate(body, eventDateFields)
   if (errorDate) {
     return res.status(400).json({ error: errorDate })
   }
-  const { observations } = body
-
-  if (observations.length > 450) {
-    return res.status(400).json({ error: 'O máximo de caracteres da observação é 450' })
-  }
-
   next()
 }
 
@@ -40,15 +44,15 @@ async function validatePut(req, res, next) {
   }
   req.eventDate = eventDateObj
 
-  const { observations } = req.body
   const eventDateValue = req.body.eventDate
 
   if (eventDateObj && !validateDate(eventDateValue)) {
     return res.status(400).json({ error: 'Data do evento inválida' })
   }
 
-  if (observations.length > 5000) {
-    return res.status(400).json({ error: 'O máximo de caracteres da observação é 1000' })
+  const lengthError = checkMaxLengths(req.body, maxLengths)
+  if (lengthError) {
+    return res.status(400).json({ error: lengthError })
   }
   next()
 }

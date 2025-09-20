@@ -30,7 +30,7 @@ async function getEventDatesNotDone() {
 
 async function createEventDate(body, user) {
   const db = await initDB(DB_TYPE_EVENT_DATES)
-  const { description, eventDate, observations, done } = body
+  const { description, eventDate, observations, done, link } = body
 
   const newEventDate = {
     id: Date.now(),
@@ -39,6 +39,7 @@ async function createEventDate(body, user) {
     observations,
     done,
     confirmed: false,
+    link,
     userIds: [user.id]
   }
 
@@ -56,7 +57,7 @@ async function createEventDate(body, user) {
 async function updateEventDate(eventId, body){
   const db = await initDB(DB_TYPE_EVENT_DATES) 
 
-  const { description, eventDate, observations, done } = body
+  const { description, eventDate, observations, done, link } = body
 
   await db.read()
   db.data.eventDates = db.data.eventDates || []
@@ -70,6 +71,7 @@ async function updateEventDate(eventId, body){
     eventDate,
     observations,
     done,
+    link,
     userIds: existingEvent.userIds
   }
   const eventDateUpdated = db.data.eventDates[index]
