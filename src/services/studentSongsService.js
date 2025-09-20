@@ -1,10 +1,13 @@
 import { initDB } from '../db/db.js'
 import { DB_TYPE_STUDENT_SONGS } from '../db/dbTypeConsts.js'
 
-async function getAllStudentSongs() {
+async function getAllStudentSongs(userType) {
   const db = await initDB(DB_TYPE_STUDENT_SONGS)
 
   await db.read()
+  const studentSongs = db.data.studentSongs
+
+  if (userType === 'admin') return studentSongs
   
   return db.data.studentSongs.filter(res => !res.studentName.includes("Luma"))
 }
