@@ -3,13 +3,11 @@ import { getEventDateById } from './eventDatesService.js'
 
 const requiredFields = {
   description: "Descrição",
-  initialDate: 'Data inicial',
-  finalDate: 'Data final',
+  eventDate: 'Data do evento',
 }
 
 const eventDateFields = {
-  initialDate: 'Data inicial',
-  finalDate: 'Data final',
+  eventDate: 'Data do evento',
 }
 
 async function validatePost(req, res, next) {
@@ -42,14 +40,10 @@ async function validatePut(req, res, next) {
   }
   req.eventDate = eventDate
 
-  const { initialDate, finalDate, observations } = req.body
+  const { eventDateAndHour, observations } = req.body
 
-  if (initialDate && !validateDate(initialDate)) {
-    return res.status(400).json({ error: 'Data inicial inválida' })
-  }
-
-  if (finalDate && !validateDate(finalDate)) {
-    return res.status(400).json({ error: 'Data final inválida' })
+  if (eventDate && !validateDate(eventDateAndHour)) {
+    return res.status(400).json({ error: 'Data do evento inválida' })
   }
 
   if (observations.length > 5000) {
