@@ -34,15 +34,15 @@ async function validatePost(req, res, next) {
 async function validatePut(req, res, next) {
   const eventDateId = Number(req.params.id)
 
-  const eventDate = await getEventDateById(eventDateId)
-  if (!eventDate) {
+  const eventDateObj = await getEventDateById(eventDateId)
+  if (!eventDateObj) {
     return res.status(404).json({ error: 'Data de evento não encontrada' })
   }
   req.eventDate = eventDate
 
-  const { eventDateAndHour, observations } = req.body
+  const { eventDate, observations } = req.body
 
-  if (eventDate && !validateDate(eventDateAndHour)) {
+  if (eventDateObj && !validateDate(eventDate)) {
     return res.status(400).json({ error: 'Data do evento inválida' })
   }
 
