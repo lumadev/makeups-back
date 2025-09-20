@@ -38,11 +38,12 @@ async function validatePut(req, res, next) {
   if (!eventDateObj) {
     return res.status(404).json({ error: 'Data de evento não encontrada' })
   }
-  req.eventDate = eventDate
+  req.eventDate = eventDateObj
 
-  const { eventDate, observations } = req.body
+  const { observations } = req.body
+  const eventDateValue = req.body.eventDate
 
-  if (eventDateObj && !validateDate(eventDate)) {
+  if (eventDateObj && !validateDate(eventDateValue)) {
     return res.status(400).json({ error: 'Data do evento inválida' })
   }
 
