@@ -20,9 +20,7 @@ router.get('/random/random-joke', async (req, res) => {
 
 router.post('/', validatePost, async (req, res) => {
   try {
-    const token = req.cookies?.token
-    const user = getUserFromToken(token)
-    
+    const user = getUserFromToken(req.cookies?.token)
     const newJoke = await createJoke(req.body, user.id)
 
     res.status(201).json(newJoke)

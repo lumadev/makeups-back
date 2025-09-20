@@ -52,8 +52,8 @@ async function validatePut(req, res, next) {
     return res.status(400).json({ error: 'Data final inválida' })
   }
 
-  if (observations.length > 450) {
-    return res.status(400).json({ error: 'O máximo de caracteres da observação é 450' })
+  if (observations.length > 5000) {
+    return res.status(400).json({ error: 'O máximo de caracteres da observação é 1000' })
   }
   next()
 }

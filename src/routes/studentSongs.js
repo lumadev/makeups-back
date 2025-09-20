@@ -14,6 +14,7 @@ import {
   validateDelete
 } from '../utils/studentSongsValidations.js'
 import { verifyToken, requireRole } from '../middlewares/authMiddleware.js'
+import { getUserFromToken } from '../utils/auth.js' 
 
 import express from 'express'
 
@@ -23,7 +24,8 @@ router.use(verifyToken)
 router.use(requireRole(['full']))
 
 router.get('/', async (req, res) => {
-  const studentSongs = await getAllStudentSongs()
+  const user = getUserFromToken(req.cookies?.token)
+  const studentSongs = await getAllStudentSongs(user.type)
 
   res.status(200).json(studentSongs)
 })
