@@ -1,5 +1,5 @@
 import { getAllMakeups, deleteMakeup, createMakeup, updateMakeup } from './makeupsService.js'
-import { createMakeupDone } from '../../services/makeupsDoneService.js'
+import { createMakeupDone } from '../makeupsDone/makeupsDoneService.js'
 
 import { validatePost, validatePut, validateDelete, validateMarkAsDone } from './makeupsValidations.js'
 import { verifyToken, requireRole } from '../../middlewares/authMiddleware.js'
