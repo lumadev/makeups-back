@@ -1,5 +1,5 @@
 import { getMakeupById } from './makeupsService.js'
-import { getStudentById } from '../../services/studentService.js'
+import { getStudentById } from '../student/studentService.js'
 import { errorFieldsRequired, errorsDate, validateDate } from '../../utils/validations.js'
 
 const requiredFields = {
