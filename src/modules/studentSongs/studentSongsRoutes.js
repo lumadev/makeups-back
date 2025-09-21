@@ -6,15 +6,15 @@ import {
   createStudentSong,
   updateStudentSong,
   deleteStudentSong
-} from '../services/studentSongsService.js'
+} from './studentSongsService.js'
 import { 
   validateGet,
   validatePost,
   validatePut,
   validateDelete
-} from '../utils/studentSongsValidations.js'
-import { verifyToken, requireRole } from '../middlewares/authMiddleware.js'
-import { getUserFromToken } from '../utils/auth.js' 
+} from './studentSongsValidations.js'
+import { verifyToken, requireRole } from '../../middlewares/authMiddleware.js'
+import { getUserFromToken } from '../../utils/auth.js' 
 
 import express from 'express'
 

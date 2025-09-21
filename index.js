@@ -11,7 +11,7 @@ import makeupsRoutes from './src/modules/makeups/makeupsRoutes.js'
 import spotifyRoutes from './src/modules/spotify/spotifyRoutes.js'
 
 import studentsRoutes from './src/modules/student/studentRoutes.js'
-import studentSongsRoutes from './src/routes/studentSongs.js'
+import studentSongsRoutes from './src/modules/studentSongs/studentSongsRoutes.js'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`

@@ -1,6 +1,6 @@
-import { errorFieldsRequired, checkMaxLengths } from './validations.js'
-import { getStudentSongById } from '../services/studentSongsService.js'
-import { getStudentById } from '../services/studentService.js'
+import { errorFieldsRequired, checkMaxLengths } from '../../utils/validations.js'
+import { getStudentSongById } from './studentSongsService.js'
+import { getStudentById } from '../student/studentService.js'
 
 const requiredFields = {
   songName: 'Nome da música',
