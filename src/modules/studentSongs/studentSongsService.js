@@ -43,7 +43,7 @@ async function getStudentSongsNotDone(studentId) {
   })
 }
 
-async function createStudentSong(student, body) {
+async function createStudentSong(student, userType, body) {
   const db = await initDB(DB_TYPE_STUDENT_SONGS)
   const { songName, artist, versionLink, isRecital, isMusicAudition } = body
 
@@ -61,7 +61,7 @@ async function createStudentSong(student, body) {
   }
 
   await db.read()
-  const songs = await getAllStudentSongs()
+  const songs = await getAllStudentSongs(userType)
 
   db.data.studentSongs = songs
   db.data.studentSongs.unshift(newSong)
@@ -111,8 +111,8 @@ async function deleteStudentSong(songId){
   await db.write()
 }
 
-async function getStudentSongById(songId) {
-  const songs = await getAllStudentSongs()
+async function getStudentSongById(songId, userType) {
+  const songs = await getAllStudentSongs(userType)
   return songs.find(r => String(r.id) === String(songId)) || null
 }
 
