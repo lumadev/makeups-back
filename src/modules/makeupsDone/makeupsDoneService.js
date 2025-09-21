@@ -1,5 +1,5 @@
-import { initDB } from '../db/db.js'
-import { DB_TYPE_MAKEUPS_DONE } from '../db/dbTypeConsts.js'
+import { initDB } from '../../db/db.js'
+import { DB_TYPE_MAKEUPS_DONE } from '../../db/dbTypeConsts.js'
 
 async function getAllMakeupsDone() {
   const db = await initDB(DB_TYPE_MAKEUPS_DONE)

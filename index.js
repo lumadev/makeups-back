@@ -6,7 +6,7 @@ import authRoutes from './src/routes/auth.js'
 import cookieParser from 'cookie-parser'
 import eventDatesRoutes from './src/modules/eventDates/eventDatesRoutes.js'
 import jokesRoutes from './src/modules/jokes/jokesRoutes.js'
-import makeupsDoneRoutes from './src/routes/makeupsDone.js'
+import makeupsDoneRoutes from './src/modules/makeupsDone/makeupsDoneRoutes.js'
 import makeupsRoutes from './src/modules/makeups/makeupsRoutes.js'
 import spotifyRoutes from './src/modules/spotify/spotifyRoutes.js'
 

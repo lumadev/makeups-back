@@ -1,5 +1,5 @@
-import { getAllMakeupsDone } from '../services/makeupsDoneService.js'
-import { verifyToken, requireRole } from '../middlewares/authMiddleware.js'
+import { getAllMakeupsDone } from './makeupsDoneService.js'
+import { verifyToken, requireRole } from '../../middlewares/authMiddleware.js'
 
 import express from 'express'
 
