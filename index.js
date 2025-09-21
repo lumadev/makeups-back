@@ -10,7 +10,7 @@ import makeupsDoneRoutes from './src/routes/makeupsDone.js'
 import makeupsRoutes from './src/modules/makeups/makeupsRoutes.js'
 import spotifyRoutes from './src/modules/spotify/spotifyRoutes.js'
 
-import studentsRoutes from './src/routes/students.js'
+import studentsRoutes from './src/modules/student/studentRoutes.js'
 import studentSongsRoutes from './src/routes/studentSongs.js'
 
 dotenv.config({
