@@ -1,5 +1,5 @@
-import { comparePasswords, generateToken } from '../utils/auth.js'
-import { getAllUsers } from '../services/usersService.js'
+import { comparePasswords, generateToken } from '../../utils/auth.js'
+import { getAllUsers } from '../../services/usersService.js'
 
 import express from 'express'
 import dotenv from 'dotenv'

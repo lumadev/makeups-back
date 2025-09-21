@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 
-import authRoutes from './src/routes/auth.js'
+import authRoutes from './src/modules/auth/authRoutes.js'
 import cookieParser from 'cookie-parser'
 import eventDatesRoutes from './src/modules/eventDates/eventDatesRoutes.js'
 import jokesRoutes from './src/modules/jokes/jokesRoutes.js'
