@@ -51,6 +51,7 @@ async function createStudentSong(student, userType, body) {
     id: Date.now(),
     songName,
     artist,
+    spotifyId: '',
     studentId: student.id,
     studentName: student.name,
     versionLink,
@@ -74,7 +75,7 @@ async function createStudentSong(student, userType, body) {
 async function updateStudentSong(studentId, songId, body) {
   const db = await initDB(DB_TYPE_STUDENT_SONGS)
 
-  const { songName, artist, versionLink, isRecital, isMusicAudition, done } = body
+  const { songName, artist, spotifyId, versionLink, isRecital, isMusicAudition, done } = body
 
   await db.read()
   db.data.studentSongs = db.data.studentSongs || []
@@ -85,6 +86,7 @@ async function updateStudentSong(studentId, songId, body) {
     ...db.data.studentSongs[index],
     songName,
     artist,
+    spotifyId,
     studentId,
     versionLink,
     isRecital: Boolean(isRecital),
