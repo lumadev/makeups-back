@@ -15,7 +15,7 @@ export async function searchTracks(token, songName, artist) {
       params: {
         q: query,
         type: 'track',
-        limit: 10,
+        limit: 50,
       },
     })
 
