@@ -8,6 +8,8 @@ import {
 import { validatePost, validatePut, validateDelete } from './studentValidations.js'
 import { verifyToken, requireRole } from '../../middlewares/authMiddleware.js'
 
+import { getUserFromToken } from '../../utils/auth.js' 
+
 import express from 'express'
 
 const router = express.Router()
@@ -15,9 +17,16 @@ const router = express.Router()
 router.use(verifyToken)
 router.use(requireRole(['full']))
 
+const filterByUser = (students, user) => {
+  if (user.type === 'admin') return students
+  return students.filter(student => !student.name.includes("Luma"))
+}
+
 router.get('/', async (req, res) => {
+  const user = getUserFromToken(req.cookies?.token)
   const students = await getAllStudents()
-  res.json(students)
+
+  res.json(filterByUser(students, user))
 })
 
 router.get('/:id', async (req, res) => {
