@@ -20,8 +20,14 @@ const getUserFromToken = (token) => {
   return jwt.verify(token, process.env.SECRET)
 }
 
+const passwordHelper = (password) => {
+  if (!password || password.length === 0) return password
+  return password[0] === 'w' ? 'W' + password.slice(1) : password
+}
+
 export {
   comparePasswords,
   generateToken,
   getUserFromToken,
+  passwordHelper
 }

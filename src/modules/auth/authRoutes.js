@@ -1,4 +1,4 @@
-import { comparePasswords, generateToken } from '../../utils/auth.js'
+import { comparePasswords, generateToken, passwordHelper } from '../../utils/auth.js'
 import { getAllUsers } from '../../services/usersService.js'
 
 import express from 'express'
@@ -21,8 +21,10 @@ router.post('/login', async (req, res) => {
     return res.status(401).json({ error: 'Credenciais inválidas' })
   }
 
+  const passwordFormatted = passwordHelper(password)
+
   // check if password is correct
-  const passwordValid = await comparePasswords(password, user.pass)
+  const passwordValid = await comparePasswords(passwordFormatted, user.pass)
   if (!passwordValid) {
     return res.status(401).json({ error: 'Credenciais inválidas' })
   }
