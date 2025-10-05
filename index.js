@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import helmet from 'helmet'
 
 import authRoutes from './src/modules/auth/authRoutes.js'
 import cookieParser from 'cookie-parser'
@@ -31,10 +32,11 @@ app.use(cors({
 
 app.use(express.json())
 app.use(cookieParser())
+app.use(helmet())
 
 app.set('trust proxy', 1)
 
-// Usa os arquivos de rota
+// use routes files
 app.use('/auth', authRoutes)
 app.use('/event-dates', eventDatesRoutes)
 app.use('/jokes', jokesRoutes)
