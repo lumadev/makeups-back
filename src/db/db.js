@@ -1,6 +1,6 @@
-import { google } from 'googleapis'
 import { Low } from 'lowdb'
 import { dbTypes } from './dbTypeConsts.js'
+import { JWT } from 'google-auth-library'
 
 import GoogleDriveAdapter from '../../src/db/googleDriveAdapter.js'
 
@@ -50,12 +50,12 @@ async function initDB(dbType = dbTypes.DB_TYPE_MAKEUPS) {
   const keyBuffer = Buffer.from(process.env.GOOGLE_SERVICE_ACCOUNT_KEY, 'base64')
   const keyJson = JSON.parse(keyBuffer.toString('utf-8'))
 
-  const auth = new google.auth.GoogleAuth({
-    credentials: keyJson,
+  const authClient = new JWT({
+    email: keyJson.client_email,
+    key: keyJson.private_key,
     scopes: ['https://www.googleapis.com/auth/drive'],
   })
-  const authClient = await auth.getClient()
-
+  
   // db file from google drive
   const fileId = getFileIdByType(dbType)
 
