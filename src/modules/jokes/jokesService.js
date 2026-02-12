@@ -1,20 +1,12 @@
-import { initDB } from '../../db/db.js'
-import { DB_TYPE_JOKES } from '../../db/dbTypeConsts.js'
+import { readAll, writeAll } from './jokesRepository.js'
 
 async function getAllJokes() {
-  const db = await initDB(DB_TYPE_JOKES)
-
-  await db.read()
-  const jokes = db.data.jokes || []
-
+  const jokes = await readAll()
   return jokes
 }
 
 async function getRandomJoke() {
-  const db = await initDB(DB_TYPE_JOKES)
-
-  await db.read()
-  const jokes = db.data.jokes || []
+  const jokes = await readAll()
   const totalJokes = jokes.length
 
   if (totalJokes === 0) {
@@ -25,18 +17,12 @@ async function getRandomJoke() {
   return jokes[randomIndex]
 }
 
-/**
- * @param {object} body body from request
- * 
- * @returns {object} newJose
- */
 async function createJoke(body, userId) {
-  const db = await initDB(DB_TYPE_JOKES)
-  
   const { description, type } = body
 
-  const jokes = db.data.jokes
-  const newIndex = jokes[0].id + 1
+  const jokes = await readAll()
+  const maxId = jokes.length > 0 ? Math.max(...jokes.map(j => Number(j.id) || 0)) : 0
+  const newIndex = maxId + 1
 
   const newJoke = {
     id: newIndex,
@@ -44,31 +30,26 @@ async function createJoke(body, userId) {
     type,
     userId
   }
-  await db.read()
-
-  db.data.jokes = jokes || []
-  db.data.jokes.unshift(newJoke)
-
-  await db.write()
+  const updated = [newJoke, ...jokes]
+  await writeAll(updated)
 
   return newJoke
 }
 
 async function deleteJoke(jokeIdParam) {
-  const db = await initDB(DB_TYPE_JOKES)
   const jokeId = Number(jokeIdParam)
 
-  await db.read()
-  db.data.jokes = db.data.jokes || []
+  const jokes = await readAll()
 
-  const index = db.data.jokes.findIndex(makeup => makeup.id === jokeId)
-  db.data.jokes.splice(index, 1)
+  const index = jokes.findIndex(j => j.id === jokeId)
+  if (index < 0) return
 
-  await db.write()
+  jokes.splice(index, 1)
+  await writeAll(jokes)
 }
 
 async function getJokeById(id) {
-  const jokes = await getAllJokes()
+  const jokes = await readAll()
   return jokes.find(r => String(r.id) === String(id)) || null
 }
 
