@@ -5,12 +5,12 @@ import { resolve } from 'node:path'
 const pnpmCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
 
 function run(cmd, args) {
-  const res = spawnSync(`${cmd} ${args.join(' ')}`, { stdio: 'inherit', shell: true })
+  const res = spawnSync(cmd, args, { stdio: 'inherit', shell: false })
   return res.status === 0
 }
 
 function runCapture(cmd, args) {
-  const res = spawnSync(`${cmd} ${args.join(' ')}`, { encoding: 'utf8', shell: true })
+  const res = spawnSync(cmd, args, { encoding: 'utf8', shell: false })
   return { ok: res.status === 0, stdout: res.stdout || '', stderr: res.stderr || '' }
 }
 
