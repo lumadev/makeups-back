@@ -14,6 +14,14 @@ const maxLengths = {
   versionLink: 300
 }
 
+function validateBodyFields(body) {
+  const error = errorFieldsRequired(body, requiredFields)
+  if (error) return error
+  const lengthError = checkMaxLengths(body, maxLengths)
+  if (lengthError) return lengthError
+  return null
+}
+
 async function validateGet(req, res, next) {
   const studentId = Number(req.params.studentId)
 
@@ -26,14 +34,9 @@ async function validateGet(req, res, next) {
 }
 
 async function validatePost(req, res, next) {
-  const error = errorFieldsRequired(req.body, requiredFields)
+  const error = validateBodyFields(req.body)
   if (error) {
     return res.status(400).json({ error })
-  }
-
-  const lengthError = checkMaxLengths(req.body, maxLengths)
-  if (lengthError) {
-    return res.status(400).json({ error: lengthError })
   }
 
   const studentId = Number(req.params.studentId)
@@ -48,14 +51,9 @@ async function validatePost(req, res, next) {
 }
 
 async function validatePut(req, res, next) {
-  const error = errorFieldsRequired(req.body, requiredFields)
+  const error = validateBodyFields(req.body)
   if (error) {
     return res.status(400).json({ error })
-  }
-
-  const lengthError = checkMaxLengths(req.body, maxLengths)
-  if (lengthError) {
-    return res.status(400).json({ error: lengthError })
   }
 
   const songId = Number(req.params.id)
