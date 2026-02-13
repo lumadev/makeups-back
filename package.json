@@ -8,6 +8,7 @@
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "start": "cross-env NODE_ENV=production node index.js",
     "lint": "eslint src/",
+    "run:front": "cd ../reposicoes-front && pnpm dev",
     "update:libs": "node scripts/update-libs.js"
   },
   "keywords": [],

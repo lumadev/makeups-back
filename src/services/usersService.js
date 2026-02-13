@@ -1,35 +1,30 @@
-import { initDB } from '../db/db.js'
-import { DB_TYPE_USERS } from '../db/dbTypeConsts.js'
+import { getDb, readAll } from './usersRepository.js'
+
+async function getUserById(userId) {
+  const users = await readAll()
+  return users.find(u => String(u.id) === String(userId)) || null
+}
 
 async function getAllUsers() {
-  const db = await initDB(DB_TYPE_USERS)
-
-  await db.read()
-  const jokes = db.data.users || []
-
-  return jokes
+  const users = await readAll()
+  return users
 }
 
 async function updateUser(userUpdated) {
-  const db = await initDB(DB_TYPE_USERS)
-  await db.read()
+  const db = await getDb()
 
-  if (!db.data.users) {
-    db.data.users = []
-  }
-
-  const userIndex = db.data.users.findIndex(u => u.id === userUpdated.id)
-  if (userIndex === -1) {
+  const index = db.data.users.findIndex(u => String(u.id) === String(userUpdated.id))
+  if (index === -1) {
     throw new Error(`Usuário ${userUpdated.id} não encontrado`)
   }
 
-  db.data.users[userIndex] = {
-    ...db.data.users[userIndex],
+  db.data.users[index] = {
+    ...db.data.users[index],
     ...userUpdated,
   }
   await db.write()
 
-  return db.data.users[userIndex]
+  return db.data.users[index]
 }
 
-export { getAllUsers, updateUser }
+export { getAllUsers, updateUser, getUserById }
