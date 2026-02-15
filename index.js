@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
+import hpp from 'hpp'
 
 import { router } from './src/routes.js'
 import { validateEnv } from './src/config/env.js'
@@ -25,7 +26,8 @@ app.use(cors({
   credentials: true, 
 }))
 
-app.use(express.json())
+app.use(express.json({ limit: '10kb' }))
+app.use(hpp())
 app.use(cookieParser())
 app.use(helmet())
 
