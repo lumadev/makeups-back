@@ -5,12 +5,35 @@ import { resolve } from 'node:path'
 const pnpmCmd = process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
 
 function run(cmd, args) {
-  const res = spawnSync(cmd, args, { stdio: 'inherit', shell: false })
-  return res.status === 0
+  const res = spawnSync(cmd, args, { stdio: 'inherit', shell: true })
+
+  if (res.status !== 0) {
+    console.error(`\n❌ Erro ao executar: ${cmd} ${args.join(' ')}`)
+    if (res.error) {
+      console.error('Erro interno:', res.error)
+    }
+    if (res.stderr) {
+      console.error('stderr:', res.stderr.toString())
+    }
+    return false
+  }
+
+  return true
 }
 
 function runCapture(cmd, args) {
-  const res = spawnSync(cmd, args, { encoding: 'utf8', shell: false })
+  const res = spawnSync(cmd, args, { encoding: 'utf8', shell: true })
+
+  if (res.status !== 0) {
+    console.error(`\n❌ Erro ao executar: ${cmd} ${args.join(' ')}`)
+    if (res.error) {
+      console.error('Erro interno:', res.error)
+    }
+    if (res.stderr) {
+      console.error('stderr:', res.stderr)
+    }
+  }
+
   return { ok: res.status === 0, stdout: res.stdout || '', stderr: res.stderr || '' }
 }
 
@@ -24,27 +47,32 @@ function majorOf(v) {
 function updatePackageJson(depsToUpdate) {
   const pkgPath = resolve(process.cwd(), 'package.json')
   const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'))
+
   for (const { name, latest, type } of depsToUpdate) {
     const range = `^${latest}`
-    if (type === 'dependencies' && pkg.dependencies && pkg.dependencies[name] !== undefined) {
+    if (type === 'dependencies' && pkg.dependencies?.[name] !== undefined) {
       pkg.dependencies[name] = range
-    } else if (type === 'devDependencies' && pkg.devDependencies && pkg.devDependencies[name] !== undefined) {
+    } else if (type === 'devDependencies' && pkg.devDependencies?.[name] !== undefined) {
       pkg.devDependencies[name] = range
     }
   }
+
   writeFileSync(pkgPath, JSON.stringify(pkg, null, 2))
 }
 
 function main() {
   const u1 = run(pnpmCmd, ['update'])
-  if (!u1) process.exit(1)
+  if (!u1) return
 
-  const { stdout } = runCapture(pnpmCmd, ['outdated', '--json'])
-  let data = {}
+  const { ok, stdout } = runCapture(pnpmCmd, ['outdated', '--json'])
+  if (!ok) return
+
+  let data
   try {
     data = JSON.parse(stdout || '{}')
-  } catch {
-    data = {}
+  } catch (err) {
+    console.error('❌ Erro ao fazer parse do JSON:', err)
+    return
   }
 
   const depsToUpdate = []
@@ -60,8 +88,9 @@ function main() {
     updatePackageJson(depsToUpdate)
     const allowScripts = process.env.UPDATE_LIBS_ALLOW_SCRIPTS === 'true'
     const installArgs = allowScripts ? ['install'] : ['install', '--ignore-scripts']
+
     const u2 = run(pnpmCmd, installArgs)
-    if (!u2) process.exit(1)
+    if (!u2) return
   }
 }
 

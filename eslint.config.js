@@ -28,7 +28,7 @@ export default defineConfig([
       ...js.configs.recommended.rules,
       ...pluginN.configs['recommended'].rules,
       'no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
-      'no-console': 'warn',
+      'no-console': ['warn', { allow: ['error'] }],
       'prefer-const': 'error',
       'no-var': 'error',
       'semi': ['error', 'never']
