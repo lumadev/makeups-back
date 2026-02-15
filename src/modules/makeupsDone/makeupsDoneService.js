@@ -1,24 +1,11 @@
-import { initDB } from '../../db/db.js'
-import { DB_TYPE_MAKEUPS_DONE } from '../../db/dbTypeConsts.js'
+import * as makeupsDoneRepository from './makeupsDoneRepository.js'
 
 async function getAllMakeupsDone() {
-  const db = await initDB(DB_TYPE_MAKEUPS_DONE)
-  
-  await db.read()
-  return db.data.reposicoes || []
+  return await makeupsDoneRepository.readAll()
 }
 
-/**
- * @param {object} body body from request
- * @param {string} studentName student name from makeupValidations
- * 
- * @returns {object} newMakeup
- */
 async function createMakeupDone(makeup) {
-  const db = await initDB(DB_TYPE_MAKEUPS_DONE)
-
   const { studentId, dateOld, dateReplacement, isOpenDate, studentName } = makeup
-
   const now = new Date()
 
   const newMakeup = {
@@ -31,12 +18,10 @@ async function createMakeupDone(makeup) {
     updated: now.toLocaleString('pt-BR')
   }
 
-  await db.read()
-
-  db.data.reposicoes = db.data.reposicoes || []
-  db.data.reposicoes.unshift(newMakeup)
-
-  await db.write()
+  const allMakeups = await makeupsDoneRepository.readAll()
+  allMakeups.unshift(newMakeup)
+  
+  await makeupsDoneRepository.writeAll(allMakeups)
 
   return newMakeup
 }
