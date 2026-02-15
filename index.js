@@ -8,6 +8,7 @@ import hpp from 'hpp'
 import { router } from './src/routes.js'
 import { validateEnv } from './src/config/env.js'
 import { errorHandler } from './src/middlewares/errorHandler.js'
+import { globalLimiter, authLimiter } from './src/middlewares/rateLimit.js'
 
 dotenv.config({ 
   path: `.env.${process.env.NODE_ENV}`
@@ -33,6 +34,9 @@ app.use(cookieParser())
 app.use(helmet())
 
 app.set('trust proxy', 1)
+
+app.use(globalLimiter)
+app.use('/auth/login', authLimiter)
 
 app.use('/', router)
 app.use(errorHandler)
