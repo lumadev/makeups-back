@@ -9,6 +9,7 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "lint": "eslint src/",
     "run:front": "cd ../reposicoes-front && pnpm dev",
+    "run:all": "concurrently \"pnpm run dev\" \"pnpm run run:front\"",
     "update:libs": "node scripts/update-libs.js"
   },
   "keywords": [],
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
+    "concurrently": "^9.2.1",
     "cross-env": "^10.1.0",
     "eslint": "^10.0.0",
     "eslint-plugin-n": "^17.23.2",
