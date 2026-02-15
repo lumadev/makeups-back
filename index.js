@@ -7,6 +7,7 @@ import hpp from 'hpp'
 
 import { router } from './src/routes.js'
 import { validateEnv } from './src/config/env.js'
+import { errorHandler } from './src/middlewares/errorHandler.js'
 
 dotenv.config({ 
   path: `.env.${process.env.NODE_ENV}`
@@ -34,5 +35,6 @@ app.use(helmet())
 app.set('trust proxy', 1)
 
 app.use('/', router)
+app.use(errorHandler)
 
 app.listen(port)
