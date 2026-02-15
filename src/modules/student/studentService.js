@@ -1,17 +1,17 @@
-import { initDB } from '../../db/db.js'
-import { DB_TYPE_STUDENTS } from '../../db/dbTypeConsts.js'
+import * as studentRepository from './studentRepository.js'
 
 async function getAllStudents() {
-  const db = await initDB(DB_TYPE_STUDENTS)
+  return await studentRepository.readAll()
+}
 
-  await db.read()
-  return db.data.alunos || []
+async function getStudentById(studentId) {
+  const students = await studentRepository.readAll()
+  return students.find(r => String(r.id) === String(studentId)) || null
 }
 
 async function createStudent(body) {
-  const db = await initDB(DB_TYPE_STUDENTS)
-
   const { name, phone, email } = body
+  const students = await studentRepository.readAll()
 
   const newStudent = {
     id: Date.now(),
@@ -21,56 +21,36 @@ async function createStudent(body) {
     dateRegister: new Date()
   }
 
-  await db.read()
-
-  const students = await getAllStudents()
-
-  db.data.alunos = students || []
-  db.data.alunos.unshift(newStudent)
-
-  await db.write()
+  students.unshift(newStudent)
+  await studentRepository.writeAll(students)
 
   return newStudent
 }
 
 async function updateStudent(studentId, body) {
-  const db = await initDB(DB_TYPE_STUDENTS) 
-
   const { name, phone, email } = body
+  const students = await studentRepository.readAll()
 
-  await db.read()
-  db.data.alunos = db.data.alunos || []
+  const index = students.findIndex(res => res.id === studentId)
+  
+  if (index === -1) return null
 
-  const index = db.data.alunos.findIndex(res => res.id === studentId)
-
-  db.data.alunos[index] = {
-    ...db.data.alunos[index],
+  students[index] = {
+    ...students[index],
     name,
     phone,
     email
   }
-  const studentUpdated = db.data.alunos[index]
 
-  await db.write()
-
-  return studentUpdated
+  await studentRepository.writeAll(students)
+  return students[index]
 }
 
 async function deleteStudent(studentId) {
-  const db = await initDB(DB_TYPE_STUDENTS)
-
-  await db.read()
-  db.data.alunos = db.data.alunos || []
-
-  const index = db.data.alunos.findIndex(student => student.id === studentId)
-  db.data.alunos.splice(index, 1)
-
-  await db.write()
-}
-
-async function getStudentById(studentId) {
-  const students = await getAllStudents()
-  return students.find(r => String(r.id) === String(studentId)) || null
+  const students = await studentRepository.readAll()
+  const filteredStudents = students.filter(student => student.id !== studentId)
+  
+  await studentRepository.writeAll(filteredStudents)
 }
 
 export { 
