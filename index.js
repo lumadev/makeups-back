@@ -19,8 +19,10 @@ validateEnv()
 const app = express()
 const port = process.env.PORT || 3000
 
+const allowedLocalhosts = ['http://localhost:5173', 'http://localhost:5174']
+
 const corsOrigin = process.env.NODE_ENV === 'development'
-  ? ['http://localhost:5173', 'http://localhost:5174']
+  ? allowedLocalhosts
   : process.env.FRONTEND_URL
 
 app.use(cors({
