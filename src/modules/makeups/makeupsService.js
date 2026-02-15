@@ -1,61 +1,39 @@
-import { initDB } from '../../db/db.js'
-import { DB_TYPE_MAKEUPS } from '../../db/dbTypeConsts.js'
+import * as makeupsRepository from './makeupsRepository.js'
 
 async function getAllMakeups() {
-  const db = await initDB(DB_TYPE_MAKEUPS)
-  
-  await db.read()
-  return db.data.reposicoes || []
+  return await makeupsRepository.readAll()
 }
 
-/**
- * @param {object} body body from request
- * @param {string} studentName student name from makeupValidations
- * 
- * @returns {object} newMakeup
- */
+async function getMakeupById(id) {
+  const makeups = await makeupsRepository.readAll()
+  return makeups.find(r => String(r.id) === String(id)) || null
+}
+
 async function createMakeup(body, studentName) {
-  const db = await initDB(DB_TYPE_MAKEUPS)
-  
   const { studentId, dateOld, dateReplacement, isOpenDate } = body
+  const allMakeups = await makeupsRepository.readAll()
 
   const newMakeup = {
     id: Date.now(),
     studentId,
-    studentName, // get student from makeupValidations
+    studentName,
     dateOld,
     dateReplacement,
     isOpenDate: isOpenDate ?? false,
   }
 
-  await db.read()
-
-  db.data.reposicoes = db.data.reposicoes || []
-  db.data.reposicoes.unshift(newMakeup)
-
-  await db.write()
+  allMakeups.unshift(newMakeup)
+  await makeupsRepository.writeAll(allMakeups)
 
   return newMakeup
 }
 
-/**
- * @param {string} idMakeup id param from request
- * @param {object} body from request
- * @param {object} makeup from makeupValidations
- * @param {string} studentName from makeupValidations
- * 
- * @returns {object} updatedMakeup
- */
 async function updateMakeup(idMakeup, body, makeup, studentName) {
-  const db = await initDB(DB_TYPE_MAKEUPS)
-
   const { studentId, dateOld, dateReplacement, isOpenDate } = body
+  const allMakeups = await makeupsRepository.readAll()
 
-  // student name from old makeup object
   let updatedStudentName = makeup.studentName
-
   if (studentId) {
-    // if student change, get studentUpdated name from makeupValidations
     updatedStudentName = studentName
   }
 
@@ -68,32 +46,20 @@ async function updateMakeup(idMakeup, body, makeup, studentName) {
     isOpenDate: isOpenDate === undefined ? makeup.isOpenDate : isOpenDate,
   }
 
-  await db.read()
-
-  const makeupIndex = db.data.reposicoes.findIndex(r => String(r.id) === String(idMakeup))
-  db.data.reposicoes[makeupIndex] = updatedMakeup
-  
-  await db.write()
+  const index = allMakeups.findIndex(r => String(r.id) === String(idMakeup))
+  if (index !== -1) {
+    allMakeups[index] = updatedMakeup
+    await makeupsRepository.writeAll(allMakeups)
+  }
 
   return updatedMakeup
 }
 
 async function deleteMakeup(idMakeup) {
-  const db = await initDB(DB_TYPE_MAKEUPS)
-  const makeupId = Number(idMakeup)
-
-  await db.read()
-  db.data.reposicoes = db.data.reposicoes || []
-
-  const index = db.data.reposicoes.findIndex(makeup => makeup.id === makeupId)
-  db.data.reposicoes.splice(index, 1)
-
-  await db.write()
-}
-
-async function getMakeupById(id) {
-  const makeups = await getAllMakeups()
-  return makeups.find(r => String(r.id) === String(id)) || null
+  const allMakeups = await makeupsRepository.readAll()
+  const filtered = allMakeups.filter(m => String(m.id) !== String(idMakeup))
+  
+  await makeupsRepository.writeAll(filtered)
 }
 
 export { 
