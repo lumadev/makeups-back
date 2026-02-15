@@ -2,17 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import helmet from 'helmet'
-
-import authRoutes from './src/modules/auth/authRoutes.js'
 import cookieParser from 'cookie-parser'
-import eventDatesRoutes from './src/modules/eventDates/eventDatesRoutes.js'
-import jokesRoutes from './src/modules/jokes/jokesRoutes.js'
-import makeupsDoneRoutes from './src/modules/makeupsDone/makeupsDoneRoutes.js'
-import makeupsRoutes from './src/modules/makeups/makeupsRoutes.js'
-import spotifyRoutes from './src/modules/spotify/spotifyRoutes.js'
 
-import studentsRoutes from './src/modules/student/studentRoutes.js'
-import studentSongsRoutes from './src/modules/studentSongs/studentSongsRoutes.js'
+import { router } from './src/routes.js'
 
 dotenv.config({
   path: `.env.${process.env.NODE_ENV}`
@@ -22,7 +14,7 @@ const app = express()
 const port = process.env.PORT || 3000
 
 const corsOrigin = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:5173'
+  ? ['http://localhost:5173', 'http://localhost:5174']
   : process.env.FRONTEND_URL
 
 app.use(cors({
@@ -36,14 +28,6 @@ app.use(helmet())
 
 app.set('trust proxy', 1)
 
-// use routes files
-app.use('/auth', authRoutes)
-app.use('/event-dates', eventDatesRoutes)
-app.use('/jokes', jokesRoutes)
-app.use('/makeups', makeupsRoutes)
-app.use('/makeups-done', makeupsDoneRoutes)
-app.use('/spotify', spotifyRoutes)
-app.use('/students', studentsRoutes)
-app.use('/student-songs', studentSongsRoutes)
+app.use('/', router)
 
 app.listen(port)
