@@ -1,116 +1,78 @@
-import { initDB } from '../../db/db.js'
-import { DB_TYPE_STUDENT_SONGS } from '../../db/dbTypeConsts.js'
+import * as repository from './studentSongsRepository.js'
 
 async function getAllStudentSongs(userType) {
-  const db = await initDB(DB_TYPE_STUDENT_SONGS)
+  const songs = await repository.readAll()
 
-  await db.read()
-  const studentSongs = db.data.studentSongs
-
-  if (userType === 'admin') return studentSongs
+  if (userType === 'admin') return songs
   
-  return db.data.studentSongs.filter(res => !res.studentName.includes("Luma"))
+  // Regra de negócio: usuários comuns não veem músicas da "Luma"
+  return songs.filter(res => !res.studentName.includes("Luma"))
 }
 
 async function getStudentSongsByStudent(studentId) {
-  const db = await initDB(DB_TYPE_STUDENT_SONGS)
-
-  await db.read()
-  return db.data.studentSongs.filter(res => res.studentId === studentId)
+  const songs = await repository.readAll()
+  return songs.filter(res => res.studentId === studentId)
 }
 
 async function getStudentSongsDone(studentId) {
-  const db = await initDB(DB_TYPE_STUDENT_SONGS)
-
-  await db.read()
-
-  const studentSongs = db.data.studentSongs
-
-  return studentSongs.filter(res => {
-    return res.studentId === studentId && res.done === true
-  })
+  const songs = await getStudentSongsByStudent(studentId)
+  return songs.filter(res => res.done === true)
 }
 
 async function getStudentSongsNotDone(studentId) {
-  const db = await initDB(DB_TYPE_STUDENT_SONGS)
-
-  await db.read()
-
-  const studentSongs = db.data.studentSongs
-
-  return studentSongs.filter(res => {
-    return res.studentId === studentId && res.done === false
-  })
+  const songs = await getStudentSongsByStudent(studentId)
+  return songs.filter(res => res.done === false)
 }
 
 async function createStudentSong(student, userType, body) {
-  const db = await initDB(DB_TYPE_STUDENT_SONGS)
-  const { songName, artist, versionLink, isRecital, isMusicAudition } = body
-
+  const songs = await repository.readAll()
+  
   const newSong = {
     id: Date.now(),
-    songName,
-    artist,
+    songName: body.songName,
+    artist: body.artist,
     spotifyId: '',
     studentId: student.id,
     studentName: student.name,
-    versionLink,
-    isRecital: Boolean(isRecital),
-    isMusicAudition: Boolean(isMusicAudition),
+    versionLink: body.versionLink,
+    isRecital: Boolean(body.isRecital),
+    isMusicAudition: Boolean(body.isMusicAudition),
     done: false,
     dateRegister: new Date()
   }
 
-  await db.read()
-  const songs = await getAllStudentSongs(userType)
-
-  db.data.studentSongs = songs
-  db.data.studentSongs.unshift(newSong)
-
-  await db.write()
+  songs.unshift(newSong)
+  await repository.writeAll(songs)
 
   return newSong
 }
 
 async function updateStudentSong(studentId, songId, body) {
-  const db = await initDB(DB_TYPE_STUDENT_SONGS)
+  const songs = await repository.readAll()
+  const index = songs.findIndex(s => s.id === songId)
 
-  const { songName, artist, spotifyId, versionLink, isRecital, isMusicAudition, done } = body
+  if (index === -1) return null
 
-  await db.read()
-  db.data.studentSongs = db.data.studentSongs || []
-
-  const index = db.data.studentSongs.findIndex(s => s.id === songId)
-
-  db.data.studentSongs[index] = {
-    ...db.data.studentSongs[index],
-    songName,
-    artist,
-    spotifyId,
+  songs[index] = {
+    ...songs[index],
+    songName: body.songName,
+    artist: body.artist,
+    spotifyId: body.spotifyId,
     studentId,
-    versionLink,
-    isRecital: Boolean(isRecital),
-    isMusicAudition: Boolean(isMusicAudition),
-    done: Boolean(done)
+    versionLink: body.versionLink,
+    isRecital: Boolean(body.isRecital),
+    isMusicAudition: Boolean(body.isMusicAudition),
+    done: Boolean(body.done)
   }
 
-  const updatedSong = db.data.studentSongs[index]
-
-  await db.write()
-
-  return updatedSong
+  await repository.writeAll(songs)
+  return songs[index]
 }
 
-async function deleteStudentSong(songId){
-  const db = await initDB(DB_TYPE_STUDENT_SONGS)
-
-  await db.read()
-  db.data.studentSongs = db.data.studentSongs || []
-
-  const index = db.data.studentSongs.findIndex(s => s.id === songId)
-  db.data.studentSongs.splice(index, 1)
-
-  await db.write()
+async function deleteStudentSong(songId) {
+  const songs = await repository.readAll()
+  const filteredSongs = songs.filter(s => s.id !== songId)
+  await repository.writeAll(filteredSongs)
 }
 
 async function getStudentSongById(songId, userType) {
