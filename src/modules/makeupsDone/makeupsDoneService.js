@@ -4,6 +4,11 @@ async function getAllMakeupsDone() {
   return await makeupsDoneRepository.readAll()
 }
 
+async function getMakeupDoneById(id) {
+  const makeups = await makeupsDoneRepository.readAll()
+  return makeups.find(r => String(r.id) === String(id)) || null
+}
+
 async function createMakeupDone(makeup) {
   const { studentId, dateOld, dateReplacement, isOpenDate, studentName } = makeup
   const now = new Date()
@@ -26,4 +31,17 @@ async function createMakeupDone(makeup) {
   return newMakeup
 }
 
-export { getAllMakeupsDone, createMakeupDone }
+async function deleteMakeupDone(idMakeup) {
+  const allMakeups = await makeupsDoneRepository.readAll()
+  const filtered = allMakeups.filter(m => String(m.id) !== String(idMakeup))
+  
+  await makeupsDoneRepository.writeAll(filtered)
+}
+
+
+export { 
+  getAllMakeupsDone, 
+  getMakeupDoneById,
+  createMakeupDone,
+  deleteMakeupDone
+}
