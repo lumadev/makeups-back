@@ -5,10 +5,13 @@ import helmet from 'helmet'
 import cookieParser from 'cookie-parser'
 
 import { router } from './src/routes.js'
+import { validateEnv } from './src/config/env.js'
 
-dotenv.config({
+dotenv.config({ 
   path: `.env.${process.env.NODE_ENV}`
 })
+
+validateEnv()
 
 const app = express()
 const port = process.env.PORT || 3000
