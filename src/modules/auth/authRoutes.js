@@ -36,6 +36,7 @@ router.post('/login', async (req, res) => {
     httpOnly: true,
     secure: true,
     sameSite: 'None',
+    partitioned: true, // CHIPS: funciona mesmo com cookies de terceiros bloqueados
     maxAge: 8 * 60 * 60 * 1000, // 8 horas
   })
 
