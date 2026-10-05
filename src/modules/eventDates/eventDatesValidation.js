@@ -39,7 +39,7 @@ async function validatePut(req, res, next) {
   const eventDateId = Number(req.params.id)
 
   const eventDateObj = await getEventDateById(eventDateId)
-  if (!eventDateObj) {
+  if (!eventDateObj || !canAccessEventDate(eventDateObj, req.user)) {
     return res.status(404).json({ error: 'Data de evento não encontrada' })
   }
   req.eventDate = eventDateObj
@@ -61,11 +61,16 @@ async function validateDelete(req, res, next) {
   const eventDateId = Number(req.params.id)
 
   const eventDate = await getEventDateById(eventDateId)
-  if (!eventDate) {
+  if (!eventDate || !canAccessEventDate(eventDate, req.user)) {
     return res.status(404).json({ error: 'Data de evento não encontrado' })
   }
 
+  req.eventDate = eventDate
   next()
+}
+
+function canAccessEventDate(eventDate, user) {
+  return user.type === 'admin' || eventDate.userIds?.includes(user.id)
 }
 
 export { validatePost, validatePut, validateDelete }
