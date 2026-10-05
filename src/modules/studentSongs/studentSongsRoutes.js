@@ -24,8 +24,7 @@ router.use(verifyToken)
 router.use(requireRole(['full']))
 
 router.get('/', async (req, res) => {
-  const user = getUserFromToken(req.cookies?.token)
-  const studentSongs = await getAllStudentSongs(user.type)
+  const studentSongs = await getAllStudentSongs()
 
   res.status(200).json(studentSongs)
 })

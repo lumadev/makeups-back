@@ -17,16 +17,9 @@ const router = express.Router()
 router.use(verifyToken)
 router.use(requireRole(['full']))
 
-const filterByUser = (students, user) => {
-  if (user.type === 'admin') return students
-  return students.filter(student => !student.name.includes("Luma"))
-}
-
 router.get('/', async (req, res) => {
-  const user = getUserFromToken(req.cookies?.token)
   const students = await getAllStudents()
-
-  res.json(filterByUser(students, user))
+  res.json(students)
 })
 
 router.get('/:id', async (req, res) => {

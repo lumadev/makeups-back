@@ -1,12 +1,8 @@
 import * as repository from './studentSongsRepository.js'
 
-async function getAllStudentSongs(userType) {
+async function getAllStudentSongs() {
   const songs = await repository.readAll()
-
-  if (userType === 'admin') return songs
-  
-  // Regra de negócio: usuários comuns não veem músicas da "Luma"
-  return songs.filter(res => !res.studentName.includes("Luma"))
+  return songs
 }
 
 async function getStudentSongsByStudent(studentId) {
@@ -75,8 +71,8 @@ async function deleteStudentSong(songId) {
   await repository.writeAll(filteredSongs)
 }
 
-async function getStudentSongById(songId, userType) {
-  const songs = await getAllStudentSongs(userType)
+async function getStudentSongById(songId) {
+  const songs = await getAllStudentSongs()
   return songs.find(r => String(r.id) === String(songId)) || null
 }
 

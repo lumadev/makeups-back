@@ -1,7 +1,6 @@
 import { errorFieldsRequired, checkMaxLengths } from '../../utils/validations.js'
 import { getStudentSongById } from './studentSongsService.js'
 import { getStudentById } from '../student/studentService.js'
-import { getUserFromToken } from '../../utils/auth.js'
 
 const requiredFields = {
   songName: 'Nome da música',
@@ -57,9 +56,7 @@ async function validatePut(req, res, next) {
   }
 
   const songId = Number(req.params.id)
-  const user = getUserFromToken(req.cookies?.token)
-
-  const song = await getStudentSongById(songId, user.type)
+  const song = await getStudentSongById(songId)
   if (!song) {
     return res.status(404).json({ error: 'Música não encontrada' })
   }
@@ -76,9 +73,7 @@ async function validatePut(req, res, next) {
 
 async function validateDelete(req, res, next) {
   const songId = Number(req.params.id)
-  const user = getUserFromToken(req.cookies?.token)
-
-  const song = await getStudentSongById(songId, user.type)
+  const song = await getStudentSongById(songId)
   if (!song) {
     return res.status(404).json({ error: 'Música não encontrada' })
   }
