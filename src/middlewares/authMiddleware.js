@@ -1,8 +1,11 @@
 import jwt from 'jsonwebtoken'
 
 function verifyToken(req, res, next) {
-  // Get from httpOnly cookie
-  const token = req.cookies?.token
+  // httpOnly cookie, with Authorization Bearer as fallback for browsers blocking third-party cookies
+  const bearer = req.headers.authorization?.startsWith('Bearer ')
+    ? req.headers.authorization.slice(7)
+    : undefined
+  const token = req.cookies?.token || bearer
 
   if (!token) {
     return res.status(401).json({ message: 'Token não fornecido.' })
@@ -11,6 +14,7 @@ function verifyToken(req, res, next) {
   try {
     const decoded = jwt.verify(token, process.env.SECRET)
     req.user = decoded
+    req.cookies = { ...req.cookies, token }
     next()
   } catch {
     return res.status(403).json({ message: 'Token inválido ou expirado.' })
