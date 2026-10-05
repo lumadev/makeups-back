@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "dev": "cross-env NODE_ENV=development tsx watch index.js",
     "start": "cross-env NODE_ENV=production node index.js",
     "lint": "eslint src/",
     "run:front": "cd ../reposicoes-front && pnpm dev",
@@ -21,11 +21,11 @@
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
-    "dotenv": "^17.4.2",
+    "dotenv": "^18.0.5",
     "express": "^5.2.1",
     "express-rate-limit": "^8.7.0",
-    "google-auth-library": "^11.0.2",
-    "googleapis": "^178.0.0",
+    "google-auth-library": "^11.1.0",
+    "googleapis": "^183.0.0",
     "helmet": "^8.3.0",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.3",
@@ -35,9 +35,9 @@
     "@eslint/js": "^10.0.1",
     "concurrently": "^10.0.5",
     "cross-env": "^10.1.0",
-    "eslint": "^10.9.1",
-    "eslint-plugin-n": "^18.3.0",
-    "globals": "^17.11.0",
-    "nodemon": "^3.1.14"
+    "eslint": "^10.12.0",
+    "eslint-plugin-n": "^18.4.1",
+    "globals": "^17.13.0",
+    "tsx": "^4.20.6"
   }
 }
